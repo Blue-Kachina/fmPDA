@@ -137,7 +137,7 @@ class fmPDA extends fmPDAGlue
     *    Example:
     *       $fm = new fmPDA($database, $host, $username, $password);
     */
-   function __construct($database, $host, $username, $password, $options = [])
+   function __construct($database, $host, $username, $password, array $options = [])
    {
       // Create our override of the standard logging object so we get the one that knows about fmRecord.
       new fmPDALogger();
@@ -575,7 +575,7 @@ class fmPDA extends fmPDAGlue
    // *********************************************************************************************************************************
    // Override of fmDataAPI to return fmError to eumulate errors returned by the old FileMaker API For PHP
    //
-   public function fmAPI($url, $method = METHOD_GET, $data = '', $options = [])
+   public function fmAPI(string $url, $method = METHOD_GET, $data = '', $options = [])
    {
       $result = parent::fmAPI($url, $method, $data, $options);
 
