@@ -24,7 +24,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importNames();
 
     $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_56,
+//        LevelSetList::UP_TO_PHP_56,
 //        LevelSetList::UP_TO_PHP_70,
 //        LevelSetList::UP_TO_PHP_71,
 //        LevelSetList::UP_TO_PHP_72,
@@ -33,6 +33,7 @@ return static function (RectorConfig $rectorConfig): void {
 //        LevelSetList::UP_TO_PHP_80,
 //        LevelSetList::UP_TO_PHP_81,
 //        LevelSetList::UP_TO_PHP_82,
+    // UP_TO_PHP runs were detrimental without scrutiny as they did not honour our inheritance.
         SetList::CODE_QUALITY,
         SetList::TYPE_DECLARATION,
     ]);
