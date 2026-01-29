@@ -122,7 +122,7 @@ class fmCURL
       $this->options['userAgent']               = CURL_USER_AGENT;
 
       if (!array_key_exists('CURL_HTTP_VERSION', $options) && defined('k_CURL_HTTP_VERSION')) {  // Option not passed but set in fmPDA.conf.php?
-         $options['CURL_HTTP_VERSION'] = k_CURL_HTTP_VERSION;
+         $options['CURL_HTTP_VERSION'] = \K_CURL_HTTP_VERSION;
       }
 
       $this->options = array_merge($this->options, $options);
