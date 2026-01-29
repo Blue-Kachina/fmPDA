@@ -1,26 +1,34 @@
 {
-   "name": "bluekachina/fmpda",
-   "type": "library",
-   "description": "A set of PHP classes for FileMaker's Data and Admin API. The special sauce, the fmPDA class: a replacement for FileMaker's API For PHP FileMaker class, using the Data API. fmPDA provides method & data structure compatibility with FileMaker's API For PHP classes.",
-   "keywords": [
-      "FileMaker",
-      "PHP",
-      "AdminAPI",
-      "DataAPI",
-      "REST"
-   ],
-   "homepage": "https://github.com/Blue-Kachina/fmPDA",
-   "version": "1.0.0",
-   "license": "MIT",
-   "authors": [
-   {
+  "name": "bluekachina/fmpda",
+  "type": "library",
+  "description": "A set of PHP classes for FileMaker's Data and Admin API. The special sauce, the fmPDA class: a replacement for FileMaker's API For PHP FileMaker class, using the Data API. fmPDA provides method & data structure compatibility with FileMaker's API For PHP classes.",
+  "keywords": [
+    "FileMaker",
+    "PHP",
+    "AdminAPI",
+    "DataAPI",
+    "REST"
+  ],
+  "homepage": "https://github.com/Blue-Kachina/fmPDA",
+  "version": "1.0.0",
+  "license": "MIT",
+  "authors": [
+    {
       "name": "Mark DeNyse",
       "email": "mark@driftwoodinteractive.com",
       "homepage": "https://www.driftwoodinteractive.com",
       "role": "Developer"
-   }
-   ],
-   "require": {
-      "php": ">=7.4"
-   }
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "rector/rector": "^1.2"
+  },
+  "scripts": {
+    "rector": "vendor/bin/rector",
+    "rector:dry-run": "vendor/bin/rector process --dry-run",
+    "rector:apply": "vendor/bin/rector process"
+  }
 }
