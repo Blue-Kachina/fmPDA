@@ -1382,7 +1382,7 @@ class fmAdminAPI extends fmAPI
 
 
    // *********************************************************************************************************************************
-   public function fmAPI(string $url, $method = METHOD_GET, $data = '', $options = [])
+   public function fmAPI($url, $method = METHOD_GET, $data = '', $options = [])
    {
       $apiResult = parent::fmAPI($url, $method, $data, $options);
 
