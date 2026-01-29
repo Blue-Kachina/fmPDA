@@ -50,7 +50,7 @@
 //
 // *********************************************************************************************************************************
 
-require_once 'fmDataAPI.class.php';
+require_once __DIR__ . '/fmDataAPI.class.php';
 
 // *********************************************************************************************************************************
 define('FMPDA_USER_AGENT',             'fmPDAphp/1.0');           // Our user agent string
@@ -69,8 +69,8 @@ if (DEFINE_FILEMAKER_CLASS) {
    class FileMaker extends fmDataAPI
    {
       static function isError($result)       { return fmGetIsError($result); }      // You can call fmGetIsError() instead of this
-      static function getAPIVersion()        { return '1.0'; }                      // Just something 'new'
-      static function getMinServerVersion()  { return '17.0.1.146'; }               // Needs FMS 17 for this version of the Data API
+      static function getAPIVersion(): string        { return '1.0'; }                      // Just something 'new'
+      static function getMinServerVersion(): string  { return '17.0.1.146'; }               // Needs FMS 17 for this version of the Data API
    }
    class fmPDAGlue extends FileMaker { }
 }
@@ -83,7 +83,7 @@ else {
 //
 class fmPDALogger extends fmLogger
 {
-   public function log($data = '', $logLevel = null)
+   public function log($data = '', $logLevel = null): void
    {
       if ($this->logging) {
 
@@ -137,7 +137,7 @@ class fmPDA extends fmPDAGlue
     *    Example:
     *       $fm = new fmPDA($database, $host, $username, $password);
     */
-   function __construct($database, $host, $username, $password, $options = array())
+   function __construct($database, $host, $username, $password, $options = [])
    {
       // Create our override of the standard logging object so we get the one that knows about fmRecord.
       new fmPDALogger();
@@ -175,9 +175,9 @@ class fmPDA extends fmPDAGlue
     *       $fm = new fmPDA($database, $host, $username, $password);
     *       $record = $fm->createRecord($layout, $fieldValues);
     */
-   public function createRecord($layout, $fieldValues = array())
+   public function createRecord($layout, $fieldValues = [])
    {
-      $data = array();
+      $data = [];
       $data[FM_FIELD_DATA] = $fieldValues;
 
       if ($this->translateResult) {
@@ -210,9 +210,9 @@ class fmPDA extends fmPDAGlue
     *       $fm = new fmPDA($database, $host, $username, $password);
     *       $contents = $fm->getContainerData($containerURL);
     */
-   public function getContainerData($containerURL, $options = array())
+   public function getContainerData($containerURL, $options = [])
    {
-      $options = array_merge(array('retryOn401Error' => true), $options);
+      $options = array_merge(['retryOn401Error' => true], $options);
 
       $result = $this->getFile($containerURL, $options);
 
@@ -277,7 +277,7 @@ class fmPDA extends fmPDAGlue
          }
          else {
             $responseData = $this->getResponseData($apiResult);
-            $result = new fmRecord($this, $layout, array_key_exists(0, $responseData) ? $responseData[0] : array());
+            $result = new fmRecord($this, $layout, array_key_exists(0, $responseData) ? $responseData[0] : []);
          }
       }
       else {
@@ -303,7 +303,7 @@ class fmPDA extends fmPDAGlue
     *       $fm = new fmPDA($database, $host, $username, $password);
     *       $findCommand = $fm->newFindCommand($layoutName);
     */
-   public function newFindCommand($layoutName)
+   public function newFindCommand($layoutName): fmFindQuery
    {
       return new fmFindQuery($this, $layoutName);
    }
@@ -324,7 +324,7 @@ class fmPDA extends fmPDAGlue
     *       $fm = new fmPDA($database, $host, $username, $password);
     *       $findCommand = $fm->newCompoundFindCommand($layoutName);
     */
-   public function newCompoundFindCommand($layoutName)
+   public function newCompoundFindCommand($layoutName): fmFindQuery
    {
       return new fmFindQuery($this, $layoutName);
    }
@@ -345,7 +345,7 @@ class fmPDA extends fmPDAGlue
     *       $fm = new fmPDA($database, $host, $username, $password);
     *       $findCommand = $fm->newFindRequest($layoutName);
     */
-   public function newFindRequest($layoutName)
+   public function newFindRequest($layoutName): fmFindRequest
    {
       return new fmFindRequest($this, $layoutName);
    }
@@ -366,7 +366,7 @@ class fmPDA extends fmPDAGlue
     *       $fm = new fmPDA($database, $host, $username, $password);
     *       $findAllCommand = $fm->newFindAllCommand($layoutName);
     */
-   public function newFindAllCommand($layoutName)
+   public function newFindAllCommand($layoutName): fmFind
    {
       return new fmFind($this, $layoutName);
    }
@@ -387,7 +387,7 @@ class fmPDA extends fmPDAGlue
     *       $fm = new fmPDA($database, $host, $username, $password);
     *       $findAnyCommand = $fm->newFindAnyCommand($layoutName);
     */
-   public function newFindAnyCommand($layoutName)
+   public function newFindAnyCommand($layoutName): fmFindAny
    {
       return new fmFindAny($this, $layoutName);
    }
@@ -409,7 +409,7 @@ class fmPDA extends fmPDAGlue
     *       $fm = new fmPDA($database, $host, $username, $password);
     *       $addCommand = $fm->newAddCommand($layoutName);
     */
-   public function newAddCommand($layoutName, $fieldValues = array())
+   public function newAddCommand($layoutName, $fieldValues = []): fmAdd
    {
       return new fmAdd($this, $layoutName, $fieldValues);
    }
@@ -432,7 +432,7 @@ class fmPDA extends fmPDAGlue
     *       $fm = new fmPDA($database, $host, $username, $password);
     *       $findAnyCommand = $fm->newEditCommand($layoutName, $recordID);
     */
-   public function newEditCommand($layoutName, $recordID, $fieldValues = array())
+   public function newEditCommand($layoutName, $recordID, $fieldValues = []): fmEdit
    {
       return new fmEdit($this, $layoutName, $recordID, $fieldValues);
    }
@@ -458,7 +458,7 @@ class fmPDA extends fmPDAGlue
     *          ...
     *       }
     */
-   public function newDeleteCommand($layoutName, $recordID)
+   public function newDeleteCommand($layoutName, $recordID): fmDelete
    {
       return new fmDelete($this, $layoutName, $recordID);
    }
@@ -486,7 +486,7 @@ class fmPDA extends fmPDAGlue
     *          ...
     *       }
     */
-   public function newDuplicateCommand($layoutName, $recordID, $duplicateScript)
+   public function newDuplicateCommand($layoutName, $recordID, $duplicateScript): fmDuplicate
    {
       return new fmDuplicate($this, $layoutName, $recordID, $duplicateScript);
    }
@@ -514,7 +514,7 @@ class fmPDA extends fmPDAGlue
     *          ...
     *       }
     */
-   public function newPerformScriptCommand($layout, $scriptName, $params = '')
+   public function newPerformScriptCommand($layout, $scriptName, $params = ''): fmScript
    {
       return new fmScript($this, $layout, $scriptName, $params);
    }
@@ -551,7 +551,7 @@ class fmPDA extends fmPDAGlue
     *          ...
     *       }
     */
-   public function newUploadContainerCommand($layout, $recordID, $fieldName, $fieldRepetition, $file)
+   public function newUploadContainerCommand($layout, $recordID, $fieldName, $fieldRepetition, $file): fmUpload
    {
       return new fmUpload($this, $layout, $recordID, $fieldName, $fieldRepetition, $file);
    }
@@ -559,7 +559,7 @@ class fmPDA extends fmPDAGlue
    // *********************************************************************************************************************************
    // Create the fmError object. Override this to use your own class and/or throw the error from here.
    //
-   public function newError($message = null, $code = null)
+   public function newError($message = null, $code = null): fmError
    {
       return new fmError($this, $message, $code);
    }
@@ -567,7 +567,7 @@ class fmPDA extends fmPDAGlue
    // *********************************************************************************************************************************
    // Create the standard fmResult object to store the response from FileMaker. Override this if you want to return a different structure.
    //
-   public function newResult($layout, $data = array())
+   public function newResult($layout, $data = []): fmResult
    {
       return new fmResult($this, $layout, $data);
    }
@@ -575,7 +575,7 @@ class fmPDA extends fmPDAGlue
    // *********************************************************************************************************************************
    // Override of fmDataAPI to return fmError to eumulate errors returned by the old FileMaker API For PHP
    //
-   public function fmAPI($url, $method = METHOD_GET, $data = '', $options = array())
+   public function fmAPI($url, $method = METHOD_GET, $data = '', $options = [])
    {
       $result = parent::fmAPI($url, $method, $data, $options);
 
@@ -632,7 +632,7 @@ class fmPDA extends fmPDAGlue
    // *********************************************************************************************************************************
    // Returns known properties. All others are ignored and a log message is generated.
    //
-   function getProperty($prop)
+   function getProperty(string $prop)
    {
       switch ($prop) {
 
@@ -682,17 +682,9 @@ class fmPDA extends fmPDAGlue
    // *********************************************************************************************************************************
    // Return all known properties.
    //
-   function getProperties()
+   function getProperties(): array
    {
-      $properties = array();
-      $properties['hostspec']    = $this->getProperty('hostspec');
-      $properties['database']    = $this->getProperty('database');
-      $properties['username']    = $this->getProperty('username');
-      $properties['password']    = $this->getProperty('password');
-      $properties['charset']     = $this->getProperty('charset');
-      $properties['locale']      = $this->getProperty('locale');
-
-      return $properties;
+       return ['hostspec' => $this->getProperty('hostspec'), 'database' => $this->getProperty('database'), 'username' => $this->getProperty('username'), 'password' => $this->getProperty('password'), 'charset' => $this->getProperty('charset'), 'locale' => $this->getProperty('locale')];
    }
 
    // *********************************************************************************************************************************
@@ -700,7 +692,7 @@ class fmPDA extends fmPDAGlue
    // Caution: setting any of these properties will invalide the Data API token so the
    // next request will force a new token to be generated.
    //
-   function setProperty($prop, $value)
+   function setProperty(string $prop, $value): void
    {
       switch ($prop) {
 
@@ -717,7 +709,7 @@ class fmPDA extends fmPDAGlue
          }
 
          case 'username': {
-            $credentials = array();
+            $credentials = [];
             $credentials['username'] = $value;
             $credentials['password'] = $this->getProperty('password');
             $this->setAuthentication($credentials);
@@ -725,7 +717,7 @@ class fmPDA extends fmPDAGlue
          }
 
          case 'password': {
-            $credentials = array();
+            $credentials = [];
             $credentials['username'] = $this->getProperty('username');
             $credentials['password'] = $value;
             $this->setAuthentication($credentials);
@@ -758,21 +750,21 @@ class fmPDA extends fmPDAGlue
    }
 
    // *********************************************************************************************************************************
-   public function listScripts($prop, $value)
+   public function listScripts($prop, $value): void
    {
       fmLogger('<br><br>*** listScripts is not supported. ***<br><br>');
       return;
    }
 
    // *********************************************************************************************************************************
-  public  function listLayouts($prop, $value)
+  public  function listLayouts($prop, $value): void
    {
       fmLogger('<br><br>*** listLayouts is not supported. ***<br><br>');
       return;
    }
 
    // *********************************************************************************************************************************
-   function setLogger($prop, $value)
+   function setLogger($prop, $value): void
    {
       fmLogger('<br><br>*** setLogger is not supported. ***<br><br>');
       return;

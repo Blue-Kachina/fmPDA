@@ -57,14 +57,14 @@ class fmError
       return $this->message;
    }
 
-   function getErrorString()
+   function getErrorString(): string
    {
       // FileMaker's language specific error messages are not included here.
       // If you really need this, it's not hard to implement this yourself.
       return '';
    }
 
-   function isValidationError()
+   function isValidationError(): bool
    {
       return false;
    }

@@ -27,18 +27,18 @@
 //
 // *********************************************************************************************************************************
 
-require_once 'fmAddEdit.class.php';
+require_once __DIR__ . '/fmAddEdit.class.php';
 
 // *********************************************************************************************************************************
 class fmAdd extends fmAddEdit
 {
-   function __construct($fm, $layout, $fieldValues = array())
+   function __construct($fm, $layout, $fieldValues = [])
    {
       parent::__construct($fm, $layout, $fieldValues);
       return;
    }
 
-   function execute($returnRecord = true)
+   function execute($returnRecord = true): void
    {
       $apiResult = $this->fm->apiCreateRecord($this->layout, $this->fields, $this->getAPIParams());
 
@@ -53,7 +53,7 @@ class fmAdd extends fmAddEdit
             if ($returnRecord && ($this->recordID != '')) {
                $apiResult = $this->fm->getRecordById($this->layout, $this->recordID);
                if (! fmGetIsError($apiResult)) {
-                  $result = $this->fm->newResult($this->layout, array(FM_DATA => array($apiResult->data)));   // Convert fmRecord into a fmResult
+                  $result = $this->fm->newResult($this->layout, [FM_DATA => [$apiResult->data]]);   // Convert fmRecord into a fmResult
                }
                else {
                   $result = $apiResult;

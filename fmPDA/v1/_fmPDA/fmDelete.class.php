@@ -27,7 +27,7 @@
 //
 // *********************************************************************************************************************************
 
-require_once 'fmCommand.class.php';
+require_once __DIR__ . '/fmCommand.class.php';
 
 // *********************************************************************************************************************************
 class fmDelete extends fmCommand
@@ -55,7 +55,7 @@ class fmDelete extends fmCommand
                $result = $apiResult;
             }
             else {
-               $result = $this->fm->newResult($this->layout, array($record->data));   // Convert fmRecord into a fmResult
+               $result = $this->fm->newResult($this->layout, [$record->data]);   // Convert fmRecord into a fmResult
             }
          }
          else {

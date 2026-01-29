@@ -34,7 +34,7 @@ class fmLayout
    public $fm;
 
    // *********************************************************************************************************************************
-   function __construct($fm, $layout, $data = array())
+   function __construct($fm, $layout, $data = [])
    {
       $this->fm = $fm;
       $this->layout = $layout;
@@ -56,7 +56,7 @@ class fmLayout
    }
 
    // *********************************************************************************************************************************
-   function listFields()
+   function listFields(): array
    {
       return array_keys($this->getFieldNames());
    }
@@ -73,16 +73,19 @@ class fmLayout
    }
 
    // *********************************************************************************************************************************
-   private function getFieldNames()
+   /**
+    * @return null[]
+    */
+   private function getFieldNames(): array
    {
-      $fields = array();
+      $fields = [];
 
       if ((count($this->data) > 0)) {
          $allFields = array_keys($this->data[FM_FIELD_DATA]);
 
-         $fields = array();
+         $fields = [];
          foreach ($allFields as $field) {
-            if (substr($field, -1, 1) == ')') {                                  // If it's a repeating field, remove (nnn)
+            if (substr($field, -1, 1) === ')') {                                  // If it's a repeating field, remove (nnn)
                $pieces = explode('(', $field);
                $field = $pieces[0];
             }
@@ -106,9 +109,12 @@ class fmLayout
    }
 
    // *********************************************************************************************************************************
-   function listRelatedSets()
+   /**
+    * @return int[]|string[]
+    */
+   function listRelatedSets(): array
    {
-      $relatedSets = array();
+      $relatedSets = [];
 
       if (array_key_exists(FM_PORTAL_DATA, $this->data)) {
          $relatedSets = array_keys($this->data[FM_PORTAL_DATA]);
@@ -118,9 +124,9 @@ class fmLayout
    }
 
    // *********************************************************************************************************************************
-   function listValueLists()
+   function listValueLists(): array
    {
-      $valueLists = array();
+      $valueLists = [];
 
       return $valueLists;
    }
@@ -139,9 +145,12 @@ class fmLayout
    }
 
    // *********************************************************************************************************************************
-   function getRelatedSets()
+   /**
+    * @return fmRelatedSet[]
+    */
+   function getRelatedSets(): array
    {
-      $result = array();
+      $result = [];
 
       foreach ($this->data[FM_PORTAL_DATA] as $relatedSet -> $data) {
          $result[$relatedSet] = new fmRelatedSet($this->fm, $this->layout, $relatedSet, $data);

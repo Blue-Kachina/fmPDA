@@ -27,7 +27,7 @@
 //
 // *********************************************************************************************************************************
 
-require_once 'fmFind.class.php';
+require_once __DIR__ . '/fmFind.class.php';
 
 // *********************************************************************************************************************************
 class fmFindQuery extends fmFind
@@ -46,11 +46,11 @@ class fmFindQuery extends fmFind
       $params = parent::getAPIParams();
 
       if (count($this->requests) > 0) {
-         $requests = array();
+         $requests = [];
          foreach ($this->requests as $findRequest) {
-            $query = array();
+            $query = [];
             $request = $findRequest->getRequest();
-            $fields = array();
+            $fields = [];
             foreach ($request as $requestParts) {
                $fields[$requestParts['fieldName']] = $requestParts['value'];
             }
@@ -84,7 +84,7 @@ class fmFindQuery extends fmFind
       return $result;
    }
 
-   function add($precedence, $findRequest)
+   function add($precedence, $findRequest): void
    {
       $request = new fmFindRequest($this->fm, $this->layout);
       $request->request = $findRequest->getRequest();
@@ -93,7 +93,7 @@ class fmFindQuery extends fmFind
       $this->requests[$precedence - 1] = $request;
    }
 
-   function setOmit($value)
+   function setOmit($value): void
    {
       $request = $this->requests[0];
       $request->setOmit($value);
@@ -101,16 +101,16 @@ class fmFindQuery extends fmFind
       $this->add(1, $request);
   }
 
-   function addFindCriterion($fieldName, $value)
+   function addFindCriterion($fieldName, $value): void
    {
       if (($fieldName != '') && ($value != '')) {
          $this->requests[0]->addFindCriterion($fieldName, $value);
       }
    }
 
-   function clearFindCriteria()
+   function clearFindCriteria(): void
    {
-      $this->requests = array();
+      $this->requests = [];
 
       $this->requests[0] = new fmFindRequest($this->fm, $this->layout);
    }

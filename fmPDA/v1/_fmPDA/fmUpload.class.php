@@ -31,7 +31,7 @@
 //
 // *********************************************************************************************************************************
 
-require_once 'fmCommand.class.php';
+require_once __DIR__ . '/fmCommand.class.php';
 
 // *********************************************************************************************************************************
 class fmUpload extends fmCommand
@@ -53,18 +53,16 @@ class fmUpload extends fmCommand
    }
 
    // We mirror what the fmEdit command does by (optionally, but ON by default) returning the record we just 'edited'.
-   function execute($returnRecord = true)
+   function execute($returnRecord = true): void
    {
       $apiResult = $this->fm->apiUploadContainer($this->layout, $this->recordID, $this->fieldName, $this->fieldRepetition, $this->file);
 
       if ($this->fm->getTranslateResult()) {
          if (fmGetIsError($apiResult)) {
-            $result = $apiResult;
-         }
-         else if ($returnRecord) {
-            $result = $this->fm->getRecordById($this->layout, $this->recordID);
-         }
-         else {
+             $result = $apiResult;
+         } elseif ($returnRecord) {
+             $result = $this->fm->getRecordById($this->layout, $this->recordID);
+         } else {
             $result = true;
          }
       }

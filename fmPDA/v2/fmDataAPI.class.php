@@ -44,7 +44,7 @@
 //
 // *********************************************************************************************************************************
 
-require_once 'fmAPI.class.php';
+require_once __DIR__ . '/fmAPI.class.php';
 
 // *********************************************************************************************************************************
 define('DATA_API_USER_AGENT',          'fmDataAPIphp/1.2');  // Our user agent string is v1.2 because it's v1 plus FMS18 & FMS19+
@@ -192,7 +192,7 @@ class fmDataAPI extends fmAPI
     *    Example:
     *       $fm = new fmDataAPI($database, $host, $username, $password);
     */
-   function __construct($database, $host, $username, $password, $options = array())
+   function __construct($database, $host, $username, $password, $options = [])
    {
       $this->database = $database;
 
@@ -201,7 +201,7 @@ class fmDataAPI extends fmAPI
       $options['userAgent']       = array_key_exists('userAgent', $options) ? $options['userAgent'] : DATA_API_USER_AGENT;
       $options['version']         = array_key_exists('version', $options) ? $options['version'] : FM_VERSION_2;
 
-      $authentication = array_key_exists('authentication', $options) ? $options['authentication'] : array('method' => 'default');
+      $authentication = array_key_exists('authentication', $options) ? $options['authentication'] : ['method' => 'default'];
 
       if (! array_key_exists('method', $authentication)) {
          $authentication['method'] = 'default';
@@ -254,9 +254,9 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiCreateRecord($layout, $data = array(), $options = array())
+   public function apiCreateRecord($layout, $data = [], $options = [])
    {
-      $payload = $this->getAPIParams($options, METHOD_POST);
+      $payload = $this->getAPIParams(METHOD_POST, $options);
 
       if (! array_key_exists(FM_FIELD_DATA, $data)) {        // If there's no ['fieldData'], add it now
          $payload[FM_FIELD_DATA] = $data;
@@ -299,9 +299,9 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiDeleteRecord($layout, $recordID, $options = array())
+   public function apiDeleteRecord($layout, string $recordID, $options = [])
    {
-      return $this->fmAPI($this->getAPIPath(PATH_RECORD, $layout) .'/'. $recordID, METHOD_DELETE, $this->getAPIParams($options, METHOD_DELETE));
+      return $this->fmAPI($this->getAPIPath(PATH_RECORD, $layout) .'/'. $recordID, METHOD_DELETE, $this->getAPIParams(METHOD_DELETE, $options));
    }
 
   /***********************************************************************************************************************************
@@ -334,9 +334,9 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiDuplicateRecord($layout, $recordID, $options = array())
+   public function apiDuplicateRecord($layout, string $recordID, $options = [])
    {
-      return $this->fmAPI($this->getAPIPath(PATH_RECORD, $layout) .'/'. $recordID, METHOD_POST, $this->getAPIParams($options, METHOD_POST));
+      return $this->fmAPI($this->getAPIPath(PATH_RECORD, $layout) .'/'. $recordID, METHOD_POST, $this->getAPIParams(METHOD_POST, $options));
    }
 
   /***********************************************************************************************************************************
@@ -373,9 +373,9 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiEditRecord($layout, $recordID, $data = array(), $options = array())
+   public function apiEditRecord($layout, string $recordID, $data = [], $options = [])
    {
-      $payload = $this->getAPIParams($options, METHOD_PATCH);
+      $payload = $this->getAPIParams(METHOD_PATCH, $options);
 
       if (! array_key_exists(FM_FIELD_DATA, $data)) {        // If there's no ['fieldData'], add it now
          $payload[FM_FIELD_DATA] = $data;
@@ -417,13 +417,13 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiExecuteScript($layout, $script, $params = '', $options = array())
+   public function apiExecuteScript($layout, $script, $params = '', array $options = [])
    {
       if ($params != '') {
          $options['scriptParams'] = $params;
       }
 
-      return $this->fmAPI($this->getAPIPath(PATH_SCRIPT, $layout) .'/'. rawurlencode($script), METHOD_GET, $this->getAPIParams($options, METHOD_GET));
+      return $this->fmAPI($this->getAPIPath(PATH_SCRIPT, $layout) .'/'. rawurlencode($script), METHOD_GET, $this->getAPIParams(METHOD_GET, $options));
    }
 
 
@@ -472,9 +472,9 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiFindRecords($layout, $data, $options = array())
+   public function apiFindRecords($layout, $data, $options = [])
    {
-      $payload = $this->getAPIParams($options, METHOD_POST);
+      $payload = $this->getAPIParams(METHOD_POST, $options);
 
       $payload = is_array($data) ? array_merge($data, $payload) : $payload;
 
@@ -517,11 +517,11 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiGetRecord($layout, $recordID, $params = '', $options = array())
+   public function apiGetRecord($layout, string $recordID, string $params = '', $options = [])
    {
-      $payload = $this->getAPIParams($options, METHOD_GET);
+      $payload = $this->getAPIParams(METHOD_GET, $options);
 
-      $payload = $payload . ((($payload != '') && ($params != '')) ? '&' : '') . $params;
+      $payload = $payload . ((($payload != '') && ($params !== '')) ? '&' : '') . $params;
 
       return $this->fmAPI($this->getAPIPath(PATH_RECORD, $layout) .'/'. $recordID, METHOD_GET, $payload);
    }
@@ -564,11 +564,11 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiGetRecords($layout, $params = '', $options = array())
+   public function apiGetRecords($layout, string $params = '', $options = [])
    {
-      $payload = $this->getAPIParams($options, METHOD_GET);
+      $payload = $this->getAPIParams(METHOD_GET, $options);
 
-      $payload = $payload . ((($payload != '') && ($params != '')) ? '&' : '') . $params;
+      $payload = $payload . ((($payload != '') && ($params !== '')) ? '&' : '') . $params;
 
       return $this->fmAPI($this->getAPIPath(PATH_RECORD, $layout), METHOD_GET, $payload);
    }
@@ -604,18 +604,18 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiGetValueList($layout, $valueList, $recordID = '')
+   public function apiGetValueList($layout, $valueList, $recordID = ''): array
    {
-      $result = array();
-      $result['displayValue'] = array();
-      $result['value'] = array();
+      $result = [];
+      $result['displayValue'] = [];
+      $result['value'] = [];
 
       $apiResult = $this->apiLayoutMetadata($layout, $recordID);
 
       if (! $this->getIsError($apiResult)) {
          $response = $this->getResponse($apiResult);
 
-         $valueLists = array_key_exists('valueLists', $response) ? $response['valueLists'] : array();
+         $valueLists = array_key_exists('valueLists', $response) ? $response['valueLists'] : [];
 
          foreach ($valueLists as $theValueList) {
             if ($theValueList['name'] == $valueList) {
@@ -682,14 +682,9 @@ class fmDataAPI extends fmAPI
     */
    public function apiListDatabases($userName = '', $password = '')
    {
-      if (($userName == '') || ($password == '')) {
-         $credentials = $this->credentials;
-      }
-      else {
-         $credentials = $this->getCredentials($userName, $password);
-      }
+      $credentials = ($userName == '') || ($password == '') ? $this->credentials : $this->getCredentials($userName, $password);
 
-      $options = array();
+      $options = [];
       $options[FM_AUTHORIZATION_BASIC] = $credentials;
       $options['decodeAsJSON']         = true;
 
@@ -858,7 +853,7 @@ class fmDataAPI extends fmAPI
     */
    public function apiValidateSession($token = '')
    {
-      $options = array();
+      $options = [];
       $options[FM_TOKEN] = ($token != '') ? $token : $this->getToken();
 
       return $this->curlAPI($this->getAPIPath(PATH_VALIDATE_SESSION), METHOD_GET, '', $options);
@@ -898,7 +893,7 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiPerformScript($layout, $scriptName, $params = '', $layoutResponse = '', $options = array())
+   public function apiPerformScript($layout, $scriptName, $params = '', $layoutResponse = '', array $options = [])
    {
       if (! array_key_exists('limit', $options)) {
          $options['limit'] = 1;
@@ -966,7 +961,7 @@ class fmDataAPI extends fmAPI
     */
    public function apiSetGlobalFields($layout, $data)
    {
-      $payload = array();
+      $payload = [];
 
       if (! array_key_exists(FM_GLOBAL_FIELDS, $data)) {            // If there's no ['globalFields'], add it now
          $payload[FM_GLOBAL_FIELDS] = $data;
@@ -1013,9 +1008,9 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiGetContainer($layout, $recordID, $fieldName, $fieldRepetition = FM_FIELD_REPETITION_1, $options = array())
+   public function apiGetContainer($layout, $recordID, $fieldName, $fieldRepetition = FM_FIELD_REPETITION_1, $options = [])
    {
-      $options = array_merge(array('retryOn401Error' => true), $options);
+      $options = array_merge(['retryOn401Error' => true], $options);
 
       $apiResult = $this->apiGetRecord($layout, $recordID);
 
@@ -1069,7 +1064,7 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiUploadContainer($layout, $recordID, $fieldName, $fieldRepetition, $file, $options = array())
+   public function apiUploadContainer($layout, string $recordID, $fieldName, $fieldRepetition, array $file, array $options = [])
    {
       $data = '';
 
@@ -1111,7 +1106,7 @@ class fmDataAPI extends fmAPI
          $data .= '--'. $boundaryID .'--' ."\r\n";
       }
 
-      $apiOptions = array();
+      $apiOptions = [];
       $apiOptions[FM_CONTENT_TYPE]  = CONTENT_TYPE_MULTIPART_FORM .'; boundary='. $boundaryID;
       $apiOptions['CURLOPT_POST']   = 0;
       $apiOptions['encodeAsJSON']   = false;
@@ -1129,7 +1124,7 @@ class fmDataAPI extends fmAPI
    //
    public function getMessages($result)
    {
-      $messages = array();
+      $messages = [];
 
       if (($result != '') && (is_array($result) && array_key_exists(FM_MESSAGES, $result))) {
          $messages = $result[FM_MESSAGES];
@@ -1143,7 +1138,7 @@ class fmDataAPI extends fmAPI
    //
    public function getResponse($result)
    {
-      $response = array();
+      $response = [];
 
       if (($result != '') && (is_array($result) && array_key_exists(FM_RESPONSE, $result))) {
          $response = $result[FM_RESPONSE];
@@ -1157,7 +1152,7 @@ class fmDataAPI extends fmAPI
    //
    public function getResponseData($result)
    {
-      $responseData = array();
+      $responseData = [];
 
       if (($result != '') && (is_array($result) && array_key_exists(FM_RESPONSE, $result)) && array_key_exists(FM_DATA, $result[FM_RESPONSE])) {
          $responseData = $result[FM_RESPONSE][FM_DATA];
@@ -1172,7 +1167,7 @@ class fmDataAPI extends fmAPI
    //
    public function getResponseDataInfo($result)
    {
-      $responseDataInfo = array();
+      $responseDataInfo = [];
 
       if (($result != '') && (is_array($result) && array_key_exists(FM_RESPONSE, $result)) && array_key_exists(FM_DATA_INFO, $result[FM_RESPONSE])) {
          $responseDataInfo = $result[FM_RESPONSE][FM_DATA_INFO];
@@ -1198,7 +1193,7 @@ class fmDataAPI extends fmAPI
 
       $this->setToken();
 
-      $options = array();
+      $options = [];
 
       switch ($this->authenticationMethod) {
          case 'default': {
@@ -1242,8 +1237,8 @@ class fmDataAPI extends fmAPI
    // *********************************************************************************************************************************
    public function getAPIPath($requestPath, $layout = '')
    {
-      $search  = array('%%%VERSION%%%',      '%%%DATABASE%%%',              '%%%LAYOUTNAME%%%');
-      $replace = array($this->version,       rawurlencode($this->database), rawurlencode($layout));
+      $search  = ['%%%VERSION%%%', '%%%DATABASE%%%', '%%%LAYOUTNAME%%%'];
+      $replace = [$this->version, rawurlencode($this->database), rawurlencode($layout)];
 
       $path = $this->host . str_replace($search, $replace, $requestPath);
 
@@ -1275,40 +1270,54 @@ class fmDataAPI extends fmAPI
    //          'deleteRelated'          => array(array('table' => '<string>', 'recordID' => '<number>'), ...)
    //          'query'                  => array(array('<fieldName>' => '<value>', '<fieldName>' => '<value>', ..., 'omit' => '<boolean>'), ... )
    //       )
-   public function getAPIParams($params = array(), $method = METHOD_GET, $returnAs = '')
+   public function getAPIParams($method = METHOD_GET, array $params = [], $returnAs = '')
    {
       // Some GET parameters have underscores in front of them while POST never does, we need a mapping table
-      $keys = array(
-            'get'  => array('offset' => '_offset', 'limit' => '_limit', 'sort' => '_sort',
-                           'script' => 'script', 'scriptParams' => 'script.param',
-                           'scriptPrerequest' => 'script.prerequest', 'scriptPrerequestParams' => 'script.prerequest.param',
-                           'scriptPresort' => 'script.presort', 'scriptPresortParams' => 'script.presort.param',
-                           'layoutResponse' => 'layout.response',
-                           'portals' => 'portal', /* For backward compatibility, use 'portal' going forward */
-                           'portal' => 'portal', 'portalLimits' => '_limit', 'portalOffsets' => '_offset'
-                     ),
-
-            'post' => array('offset' => 'offset', 'limit' => 'limit', 'sort' => 'sort',
-                           'script' => 'script', 'scriptParams' => 'script.param',
-                           'scriptPrerequest' => 'script.prerequest', 'scriptPrerequestParams' => 'script.prerequest.param',
-                           'scriptPresort' => 'script.presort', 'scriptPresortParams' => 'script.presort.param',
-                           'layoutResponse' => 'layout.response',
-                           'portals' => 'portal', /* For backward compatibility, use 'portal' going forward */
-                           'portal' => 'portal', 'portalLimits' => 'limit', 'portalOffsets' => 'offset',
-                           'deleteRelated' => 'deleteRelated',
-                           'query' => 'query'
-                     )
-      );
+      $keys = ['get'  => [
+          'offset' => '_offset',
+          'limit' => '_limit',
+          'sort' => '_sort',
+          'script' => 'script',
+          'scriptParams' => 'script.param',
+          'scriptPrerequest' => 'script.prerequest',
+          'scriptPrerequestParams' => 'script.prerequest.param',
+          'scriptPresort' => 'script.presort',
+          'scriptPresortParams' => 'script.presort.param',
+          'layoutResponse' => 'layout.response',
+          'portals' => 'portal',
+          /* For backward compatibility, use 'portal' going forward */
+          'portal' => 'portal',
+          'portalLimits' => '_limit',
+          'portalOffsets' => '_offset',
+      ], 'post' => [
+          'offset' => 'offset',
+          'limit' => 'limit',
+          'sort' => 'sort',
+          'script' => 'script',
+          'scriptParams' => 'script.param',
+          'scriptPrerequest' => 'script.prerequest',
+          'scriptPrerequestParams' => 'script.prerequest.param',
+          'scriptPresort' => 'script.presort',
+          'scriptPresortParams' => 'script.presort.param',
+          'layoutResponse' => 'layout.response',
+          'portals' => 'portal',
+          /* For backward compatibility, use 'portal' going forward */
+          'portal' => 'portal',
+          'portalLimits' => 'limit',
+          'portalOffsets' => 'offset',
+          'deleteRelated' => 'deleteRelated',
+          'query' => 'query',
+      ]];
 
       $method = strtoupper($method);
 
-      $key = (($method == METHOD_GET) || ($method == METHOD_DELETE)) ? 'get' : 'post';
+      $key = (($method === METHOD_GET) || ($method === METHOD_DELETE)) ? 'get' : 'post';
 
-      if (($returnAs == '') && ($key == 'get')) {
+      if (($returnAs == '') && ($key === 'get')) {
          $returnAs = 'text';
       }
 
-      $data = array();
+      $data = [];
 
       if (array_key_exists('offset', $params) && ($params['offset'] != 0)) {
          $data[$keys[$key]['offset']] = $params['offset'];
@@ -1319,12 +1328,15 @@ class fmDataAPI extends fmAPI
       }
 
       if (array_key_exists('sort', $params) && (count($params['sort']) > 0)) {
-         $sort = array();
+         $sort = [];
          foreach ($params['sort'] as $sortItem) {
-           $sort[] = array('fieldName' => $sortItem['fieldName'],    // json_encode() will take care of proper encoding for GET
-                            'sortOrder' => array_key_exists('sortOrder', $sortItem) ? $sortItem['sortOrder'] : 'ascend');
+           $sort[] = [
+               'fieldName' => $sortItem['fieldName'],
+               // json_encode() will take care of proper encoding for GET
+               'sortOrder' => array_key_exists('sortOrder', $sortItem) ? $sortItem['sortOrder'] : 'ascend',
+           ];
          }
-         $data[$keys[$key]['sort']] = ($key == 'get') ? $this->encodeParameter(json_encode($sort), $method) : $sort;
+         $data[$keys[$key]['sort']] = ($key === 'get') ? $this->encodeParameter(json_encode($sort), $method) : $sort;
       }
 
       if (array_key_exists('script', $params) && ($params['script'] != '')) {
@@ -1396,14 +1408,13 @@ class fmDataAPI extends fmAPI
 
 
       if ($returnAs == 'text') {
-         $query = '';
-         foreach ($data as $key => $value) {
-           $query .= $key .'='. $value .'&';
-         }
-         $data = rtrim($query, '&');
-      }
-      else if ($returnAs == 'json') {
-         $data = json_encode($data);
+          $query = '';
+          foreach ($data as $key => $value) {
+            $query .= $key .'='. $value .'&';
+          }
+          $data = rtrim($query, '&');
+      } elseif ($returnAs == 'json') {
+          $data = json_encode($data);
       }
 
       return $data;
@@ -1425,7 +1436,7 @@ class fmDataAPI extends fmAPI
    }
 
    // *********************************************************************************************************************************
-   public function getCredentials($userName, $password)
+   public function getCredentials($userName, $password): string
    {
       $credentials = '';
 
@@ -1437,7 +1448,7 @@ class fmDataAPI extends fmAPI
    }
 
    // *********************************************************************************************************************************
-   public function setAuthentication($data = array())
+   public function setAuthentication($data = []): void
    {
       $this->authenticationMethod = array_key_exists('method', $data) ? strtolower($data['method']) : 'default';
 
@@ -1454,9 +1465,9 @@ class fmDataAPI extends fmAPI
                // See if there's any external authentiation we need to add.
                // This allows us to access other database(s) on the same server in addition to the one we're connecting to.
                if (array_key_exists('sources', $data) && (count($data['sources']) > 0)) {
-                  $this->dataSources = array();
+                  $this->dataSources = [];
                   foreach($data['sources'] as $source) {
-                     $this->dataSources[FM_DATASOURCE][] = array('database' => $source['database'], 'username' => $source['username'], 'password' => $source['password']);
+                     $this->dataSources[FM_DATASOURCE][] = ['database' => $source['database'], 'username' => $source['username'], 'password' => $source['password']];
                   }
                }
             }
@@ -1468,7 +1479,7 @@ class fmDataAPI extends fmAPI
             $oauthIdentifier  = array_key_exists('oauthIdentifier', $data) ? $data['oauthIdentifier'] : '';
 
             if (($oauthID != '') && ($oauthIdentifier != '')) {
-               $this->oauth = array();
+               $this->oauth = [];
                $this->oauth[FM_OAUTH_REQUEST_ID] = $oauthID;
                $this->oauth[FM_OAUTH_REQUEST_IDENTIFIER] = $oauthIdentifier;
             }

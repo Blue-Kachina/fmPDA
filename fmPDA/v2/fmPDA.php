@@ -52,32 +52,32 @@
 //
 // *********************************************************************************************************************************
 
-require_once '_fmPDA/fmPDA.conf.php';
+require_once __DIR__ . '/_fmPDA/fmPDA.conf.php';
 
-require_once '_fmPDA/fmUtils.inc.php';
+require_once __DIR__ . '/_fmPDA/fmUtils.inc.php';
 
-require_once '_fmPDA/fmError.class.php';
+require_once __DIR__ . '/_fmPDA/fmError.class.php';
 
-require_once '_fmPDA/fmFindQuery.class.php';
-require_once '_fmPDA/fmFindRequest.class.php';
-require_once '_fmPDA/fmFindAny.class.php';
+require_once __DIR__ . '/_fmPDA/fmFindQuery.class.php';
+require_once __DIR__ . '/_fmPDA/fmFindRequest.class.php';
+require_once __DIR__ . '/_fmPDA/fmFindAny.class.php';
 
-require_once '_fmPDA/fmAdd.class.php';
-require_once '_fmPDA/fmEdit.class.php';
-require_once '_fmPDA/fmDelete.class.php';
-require_once '_fmPDA/fmDuplicate.class.php';
-require_once '_fmPDA/fmUpload.class.php';
+require_once __DIR__ . '/_fmPDA/fmAdd.class.php';
+require_once __DIR__ . '/_fmPDA/fmEdit.class.php';
+require_once __DIR__ . '/_fmPDA/fmDelete.class.php';
+require_once __DIR__ . '/_fmPDA/fmDuplicate.class.php';
+require_once __DIR__ . '/_fmPDA/fmUpload.class.php';
 
-require_once '_fmPDA/fmResult.class.php';
-require_once '_fmPDA/fmRecord.class.php';
+require_once __DIR__ . '/_fmPDA/fmResult.class.php';
+require_once __DIR__ . '/_fmPDA/fmRecord.class.php';
 
-require_once '_fmPDA/fmLayout.class.php';
-require_once '_fmPDA/fmRelatedSet.class.php';
-require_once '_fmPDA/fmField.class.php';
+require_once __DIR__ . '/_fmPDA/fmLayout.class.php';
+require_once __DIR__ . '/_fmPDA/fmRelatedSet.class.php';
+require_once __DIR__ . '/_fmPDA/fmField.class.php';
 
-require_once '_fmPDA/fmScript.class.php';
+require_once __DIR__ . '/_fmPDA/fmScript.class.php';
 
-require_once 'fmPDA.class.php';
+require_once __DIR__ . '/fmPDA.class.php';
 
 
 ?>

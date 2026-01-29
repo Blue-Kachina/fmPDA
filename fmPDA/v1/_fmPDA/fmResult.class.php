@@ -33,7 +33,7 @@ class fmResult
    public $layout;
    public $fm;
 
-   function __construct($fm, $layout, $data = array())
+   function __construct($fm, $layout, $data = [])
    {
       $this->fm = $fm;
       $this->layout = $layout;
@@ -55,9 +55,12 @@ class fmResult
       return $result;
    }
 
-   function getRecords()
+   /**
+    * @return fmRecord[]
+    */
+   function getRecords(): array
    {
-      $records = array();
+      $records = [];
       foreach($this->data as $data) {
          $records[] = new fmRecord($this->fm, $this->layout, $data);
       }
@@ -65,16 +68,19 @@ class fmResult
       return $records;
    }
 
-   function getFields()
+   /**
+    * @return int[]|string[]
+    */
+   function getFields(): array
    {
-      $fields = array();
+      $fields = [];
 
       if ((count($this->data) > 0)) {
          $allfields = array_keys($this->data[0][FM_FIELD_DATA]);
 
-         $fields = array();
+         $fields = [];
          foreach ($allfields as $field) {
-            if (substr($field, -1, 1) == ')') {                            // If it's a repeating field, remove (nnn)
+            if (substr($field, -1, 1) === ')') {                            // If it's a repeating field, remove (nnn)
                $pieces = explode('(', $field);
                $field = $pieces[0];
             }
@@ -85,9 +91,12 @@ class fmResult
       return $fields;
    }
 
-   function getRelatedSets()
+   /**
+    * @return int[]|string[]
+    */
+   function getRelatedSets(): array
    {
-      $relatedSets = array();
+      $relatedSets = [];
 
       $recordData = $this->data[0];
       if (! is_null($recordData) && array_key_exists(FM_PORTAL_DATA, $recordData)) {
@@ -109,12 +118,12 @@ class fmResult
       return $this->getFetchCount();
    }
 
-   function getFetchCount()
+   function getFetchCount(): int
    {
       return count($this->data);
    }
 
-   function getFirstRecord()
+   function getFirstRecord(): ?fmRecord
    {
       if (count($this->data) > 0) {
          return new fmRecord($this->fm, $this->layout, $this->data[0]);
@@ -124,7 +133,7 @@ class fmResult
       }
    }
 
-   function getLastRecord()
+   function getLastRecord(): ?fmRecord
    {
       if (count($this->data) > 0) {
          return new fmRecord($this->fm, $this->layout, $this->data[count($this->data) - 1]);

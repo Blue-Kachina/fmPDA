@@ -27,14 +27,14 @@
 //
 // *********************************************************************************************************************************
 
-require_once 'fmAddEdit.class.php';
+require_once __DIR__ . '/fmAddEdit.class.php';
 
 // *********************************************************************************************************************************
 class fmEdit extends fmAddEdit
 {
    public $modificationID;
 
-   function __construct($fm, $layout, $recordID = '', $fieldValues = array())
+   function __construct($fm, $layout, $recordID = '', $fieldValues = [])
    {
       parent::__construct($fm, $layout, $fieldValues);
 
@@ -50,18 +50,16 @@ class fmEdit extends fmAddEdit
 
       if ($this->fm->getTranslateResult()) {
          if (fmGetIsError($apiResult)) {
-            $result = $apiResult;
-         }
-         else if ($returnRecord) {
-            $apiResult = $this->fm->getRecordById($this->layout, $this->recordID);
-            if (! fmGetIsError($apiResult)) {
-               $result = $this->fm->newResult($this->layout, array($apiResult->data));   // Convert fmRecord into a fmResult
-            }
-            else {
-               $result = $apiResult;
-            }
-         }
-         else {
+             $result = $apiResult;
+         } elseif ($returnRecord) {
+             $apiResult = $this->fm->getRecordById($this->layout, $this->recordID);
+             if (! fmGetIsError($apiResult)) {
+                $result = $this->fm->newResult($this->layout, [$apiResult->data]);   // Convert fmRecord into a fmResult
+             }
+             else {
+                $result = $apiResult;
+             }
+         } else {
             $result = true;
          }
       }
@@ -72,7 +70,7 @@ class fmEdit extends fmAddEdit
       return $result;
    }
 
-   function setModificationId($modificationID = '')
+   function setModificationId($modificationID = ''): void
    {
       $this->modificationID = $modificationID;
    }

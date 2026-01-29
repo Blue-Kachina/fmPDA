@@ -31,7 +31,7 @@
 //
 // *********************************************************************************************************************************
 
-require_once 'fmCommand.class.php';
+require_once __DIR__ . '/fmCommand.class.php';
 
 // *********************************************************************************************************************************
 class fmUpload extends fmCommand
@@ -59,13 +59,12 @@ class fmUpload extends fmCommand
 
       if ($this->fm->getTranslateResult()) {
          if (fmGetIsError($apiResult)) {
-            $result = $apiResult;
-         }
-         else if ($returnRecord) {
-            $record = $this->fm->getRecordById($this->layout, $this->recordID);
-            $result = $this->fm->newResult($this->layout, array(FM_DATA => array($record->data)));   // Convert fmRecord into a fmResult
-         }
-         else {
+             $result = $apiResult;
+         } elseif ($returnRecord) {
+             $record = $this->fm->getRecordById($this->layout, $this->recordID);
+             $result = $this->fm->newResult($this->layout, [FM_DATA => [$record->data]]);
+             // Convert fmRecord into a fmResult
+         } else {
             $result = true;
          }
       }

@@ -40,7 +40,7 @@
 //
 // *********************************************************************************************************************************
 
-require_once 'fmAPI.class.php';
+require_once __DIR__ . '/fmAPI.class.php';
 
 // *********************************************************************************************************************************
 define('ADMIN_API_USER_AGENT',         'fmAdminAPIphp/2.0');     // Our user agent string
@@ -77,13 +77,12 @@ define('FM_ERROR_INVALID_ADMIN_API_TOKEN',   1703);                    // Invali
 define('FM_ADMIN_SESSION_TOKEN',      'FM-Admin-Session-Token');       // Where we store the token in the PHP session
 
 // *********************************************************************************************************************************
-function convertBoolean_arraywalk(&$value, $key)
+function convertBoolean_arraywalk(&$value, $key): void
 {
-   if (strtolower($value) == 'true') {
-      $value = true;
-   }
-   else if (strtolower($value) == 'false') {
-      $value = false;
+   if (strtolower($value) === 'true') {
+       $value = true;
+   } elseif (strtolower($value) === 'false') {
+       $value = false;
    }
 
    return;
@@ -147,7 +146,7 @@ class fmAdminAPI extends fmAPI
     *    Example:
     *       $fm = new fmAdminAPI($host, $username, $password);
     */
-   function __construct($host, $username = '', $password = '', $options = array())
+   function __construct($host, $username = '', $password = '', $options = [])
    {
       $options['sendCredentialsIfNoToken']   = true;     // v2 supports this
       $options['logCURLResult']              = false;
@@ -158,7 +157,7 @@ class fmAdminAPI extends fmAPI
 
       $this->storeUNPW                       = array_key_exists('storeUNPW', $options) ? $options['storeUNPW'] : false;
 
-      $authentication = array('method' => 'default', 'username' => $username, 'password' => $password);
+      $authentication = ['method' => 'default', 'username' => $username, 'password' => $password];
       $options['authentication'] = $authentication;
 
       parent::__construct($options);
@@ -194,7 +193,7 @@ class fmAdminAPI extends fmAPI
     */
    public function apiGetServerInfo()
    {
-      $apiOptions = array();
+      $apiOptions = [];
       $apiOptions[FM_CONTENT_TYPE]  = CONTENT_TYPE_JSON;
       $apiOptions['decodeAsJSON']   = true;
 
@@ -381,7 +380,7 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiGetWPEConfiguration($machineID = '')
+   public function apiGetWPEConfiguration(?string $machineID = '')
    {
       $extra = ($machineID >= 1) ? '/'. $machineID : '';
 
@@ -410,7 +409,7 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiSetWPEConfiguration($data, $machineID = '')
+   public function apiSetWPEConfiguration($data, ?string $machineID = '')
    {
       $extra = ($machineID >= 1) ? '/'. $machineID : '';
 
@@ -572,9 +571,9 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiPerformOnDatabases($status, $options = array())
+   public function apiPerformOnDatabases($status, $options = [])
    {
-      $data = array();
+      $data = [];
 
       $data['status'] = $status;
       $data = array_merge($data, $options);
@@ -613,9 +612,9 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiPerformOnDatabase($databaseID, $status, $options = array())
+   public function apiPerformOnDatabase(string $databaseID, $status, $options = [])
    {
-      $data = array();
+      $data = [];
 
       $data['status'] = $status;
       $data = array_merge($data, $options);
@@ -845,9 +844,9 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiDisconnectClient($clientID, $message = '', $graceTime = '')
+   public function apiDisconnectClient(string $clientID, $message = '', $graceTime = '')
    {
-      $data = array();
+      $data = [];
       if ($message != '') {
          $data['message'] = $message;
       }
@@ -879,7 +878,7 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiSendMessageToClient($clientID, $message)
+   public function apiSendMessageToClient(string $clientID, $message)
    {
       return $this->fmAPI($this->getAPIPath(PATH_ADMIN_CLIENT) .'/'. $clientID .'/'. rawurlencode($message), METHOD_POST);
    }
@@ -958,7 +957,7 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiDeleteSchedule($scheduleID)
+   public function apiDeleteSchedule(string $scheduleID)
    {
       return $this->fmAPI($this->getAPIPath(PATH_ADMIN_SCHEDULES) .'/'. $scheduleID, METHOD_DELETE);
    }
@@ -985,7 +984,7 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiRunSchedule($scheduleID)
+   public function apiRunSchedule(string $scheduleID)
    {
       return $this->fmAPI($this->getAPIPath(PATH_ADMIN_SCHEDULES) .'/'. $scheduleID .'/run', METHOD_PUT);
    }
@@ -1012,7 +1011,7 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiEnableSchedule($scheduleID)
+   public function apiEnableSchedule(string $scheduleID)
    {
       return $this->fmAPI($this->getAPIPath(PATH_ADMIN_SCHEDULES) .'/'. $scheduleID .'/enable', METHOD_PUT);
    }
@@ -1039,7 +1038,7 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiDisableSchedule($scheduleID)
+   public function apiDisableSchedule(string $scheduleID)
    {
       return $this->fmAPI($this->getAPIPath(PATH_ADMIN_SCHEDULES) .'/'. $scheduleID .'/disable', METHOD_PUT);
    }
@@ -1066,7 +1065,7 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiDuplicateSchedule($scheduleID)
+   public function apiDuplicateSchedule(string $scheduleID)
    {
       return $this->fmAPI($this->getAPIPath(PATH_ADMIN_SCHEDULES) .'/'. $scheduleID .'/duplicate', METHOD_POST);
    }
@@ -1093,7 +1092,7 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiGetSchedule($scheduleID)
+   public function apiGetSchedule(string $scheduleID)
    {
       return $this->fmAPI($this->getAPIPath(PATH_ADMIN_SCHEDULES) .'/'. $scheduleID, METHOD_GET);
    }
@@ -1121,7 +1120,7 @@ class fmAdminAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiSetSchedule($scheduleID, $data)
+   public function apiSetSchedule(string $scheduleID, $data)
    {
       return $this->fmAPI($this->getAPIPath(PATH_ADMIN_SCHEDULES) .'/'. $scheduleID, METHOD_PUT, $data);
    }
@@ -1179,7 +1178,7 @@ class fmAdminAPI extends fmAPI
          }
       }
       else {
-         $data = array();
+         $data = [];
          $data['host']     = $this->host;
          $data['username'] = $this->userName;
          $data['password'] = $this->password;
@@ -1207,36 +1206,27 @@ class fmAdminAPI extends fmAPI
     * GetFileMakerLog($apiResult, $type, $format)
     *
     */
-   protected function GetFileMakerLog($apiResult, $type, $format)
+   protected function GetFileMakerLog(array $apiResult, $type, $format): array
    {
       $apiResult[FM_RESPONSE] = '';
 
       // Location of your logs directory. If it's different for your server, change it here.
-      if (stristr(PHP_OS, 'darwin')) {		           										  // Check before 'win' since 'win' is in 'darwin'!
-         $logBase = '/Library/FileMaker Server/Logs/';
-      }
-      else if (stristr(PHP_OS, 'win')) {
-         $logBase = 'C:\Program Files\FileMaker\FileMaker Server\Logs\\';
-      }
-      else {
+      if (stristr(PHP_OS, 'darwin')) {
+          // Check before 'win' since 'win' is in 'darwin'!
+          $logBase = '/Library/FileMaker Server/Logs/';
+      } elseif (stristr(PHP_OS, 'win')) {
+          $logBase = 'C:\Program Files\FileMaker\FileMaker Server\Logs\\';
+      } else {
          $logBase = ''; // Cloud? Not sure what the path is...
       }
 
-      if ($logBase != '') {                                                       // Define the paths to the log files in the OS
-         $logPaths = array('fmdapi'       => $logBase .'fmdapi.log',
-                           'access'       => $logBase .'Access.log',
-                           'event'        => $logBase .'Event.log',
-                           'stderr'       => $logBase .'stderr',
-                           'stdout'       => $logBase .'stdout',
-                           'topcallstats' => $logBase .'TopCallStats.log',
-                           'wpedebug'     => $logBase .'wpe_debug.log',
-                           'wpe'          => $logBase .'wpe.log'
-                     );
+      if ($logBase !== '') {                                                       // Define the paths to the log files in the OS
+         $logPaths = ['fmdapi'       => $logBase .'fmdapi.log', 'access'       => $logBase .'Access.log', 'event'        => $logBase .'Event.log', 'stderr'       => $logBase .'stderr', 'stdout'       => $logBase .'stdout', 'topcallstats' => $logBase .'TopCallStats.log', 'wpedebug'     => $logBase .'wpe_debug.log', 'wpe'          => $logBase .'wpe.log'];
 
          $logType = strtolower($type);
          $logPath = array_key_exists($logType, $logPaths) ? $logPaths[$logType] : '';
 
-         if (($logPath != '') && file_exists($logPath)) {
+         if (($logPath !== '') && file_exists($logPath)) {
             $apiResult[FM_RESPONSE] = file_get_contents($logPath);              // Get the log file
 
             switch ($format) {
@@ -1253,12 +1243,8 @@ class fmAdminAPI extends fmAPI
                                             '<tr class="'. $rowClass .'">'.
                                             '<td class="'. $cellClass .'">'.
 
-                                            str_replace(array("\t",
-                                                              "\r",
-                                                              "\n"),
-                                                        array('</td><td class="'. $cellClass .'">',
-                                                              '</td></tr><tr class="'. $rowClass .'"><td class="'. $cellClass .'">',
-                                                              '</td></tr><tr class="'. $rowClass .'"><td class="'. $cellClass .'">'),
+                                            str_replace(["\t", "\r", "\n"],
+                                                        ['</td><td class="'. $cellClass .'">', '</td></tr><tr class="'. $rowClass .'"><td class="'. $cellClass .'">', '</td></tr><tr class="'. $rowClass .'"><td class="'. $cellClass .'">'],
                                                         htmlspecialchars($apiResult[FM_RESPONSE])).
 
                                             '</td>'.
@@ -1339,9 +1325,12 @@ class fmAdminAPI extends fmAPI
    // returned, so you'll either need to walk the array or look for a specific code with the getCodeExists() method.
    // For consistency with the Data API, we map FM_TEXT keys to FM_MESSAGE.
    //
-   public function getMessages($result)
+   /**
+    * @return mixed[]
+    */
+   public function getMessages($result): array
    {
-      $messages = array();
+      $messages = [];
 
       if (($result != '') && (is_array($result) && array_key_exists(FM_MESSAGES, $result))) {
          $resultMessages = $result[FM_MESSAGES];
@@ -1364,7 +1353,7 @@ class fmAdminAPI extends fmAPI
    //
    public function getResponse($result)
    {
-      $response = array();
+      $response = [];
 
       if (($result != '') && (is_array($result) && array_key_exists(FM_RESPONSE, $result))) {
          $response = $result[FM_RESPONSE];
@@ -1393,7 +1382,7 @@ class fmAdminAPI extends fmAPI
 
 
    // *********************************************************************************************************************************
-   public function fmAPI($url, $method = METHOD_GET, $data = '', $options = array())
+   public function fmAPI($url, $method = METHOD_GET, $data = '', $options = [])
    {
       $apiResult = parent::fmAPI($url, $method, $data, $options);
 
@@ -1411,11 +1400,11 @@ class fmAdminAPI extends fmAPI
    //
    protected function login()
    {
-      $data = array();
+      $data = [];
 
       $this->setToken();
 
-      $options = array();
+      $options = [];
       $options[FM_AUTHORIZATION_BASIC] = $this->credentials;
 
       $options[FM_CONTENT_TYPE] = CONTENT_TYPE_JSON;
@@ -1453,8 +1442,8 @@ class fmAdminAPI extends fmAPI
    {
       $path = parent::getAPIPath($requestPath);
 
-      $search  = array('%%%FMI%%%');
-      $replace = (! $this->cloud ) ? PATH_FMS_SERVER_API_BASE : '';
+      $search  = ['%%%FMI%%%'];
+      $replace = ($this->cloud ) ? '' : PATH_FMS_SERVER_API_BASE;
 
       $path = str_replace($search, $replace, $path);
 
@@ -1462,7 +1451,7 @@ class fmAdminAPI extends fmAPI
    }
 
    // *********************************************************************************************************************************
-   public function setAuthentication($data = array())
+   public function setAuthentication($data = []): void
    {
       $this->credentials = '';
 

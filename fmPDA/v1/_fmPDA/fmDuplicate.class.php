@@ -27,7 +27,7 @@
 //
 // *********************************************************************************************************************************
 
-require_once 'fmCommand.class.php';
+require_once __DIR__ . '/fmCommand.class.php';
 
 // *********************************************************************************************************************************
 class fmDuplicate extends fmCommand
@@ -61,7 +61,7 @@ class fmDuplicate extends fmCommand
 
             $apiResult = $this->fm->getRecordById($this->layout, $duplicatedRecordID);
             if (! fmGetIsError($apiResult)) {
-               $result = $this->fm->newResult($this->layout, array($apiResult->data));   // Convert fmRecord into a fmResult
+               $result = $this->fm->newResult($this->layout, [$apiResult->data]);   // Convert fmRecord into a fmResult
             }
             else {
                $result = $apiResult;

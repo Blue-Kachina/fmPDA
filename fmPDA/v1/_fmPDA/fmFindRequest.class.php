@@ -42,16 +42,16 @@ class fmFindRequest
       $this->clearFindCriteria();
    }
 
-   function addFindCriterion($fieldName, $value)
+   function addFindCriterion($fieldName, $value): void
    {
       if (($fieldName != '') && ($value != '')) {
-         $this->request[] = array('fieldName' => $fieldName, 'value' => $value);
+         $this->request[] = ['fieldName' => $fieldName, 'value' => $value];
       }
    }
 
-   function clearFindCriteria()
+   function clearFindCriteria(): void
    {
-      $this->request = array();
+      $this->request = [];
       $this->omit = false;
    }
 
@@ -65,7 +65,7 @@ class fmFindRequest
       return $this->request;
    }
 
-   function setOmit($value)
+   function setOmit($value): void
    {
       $this->omit = $value;
    }

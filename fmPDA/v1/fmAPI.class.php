@@ -43,7 +43,7 @@
 //
 // *********************************************************************************************************************************
 
-require_once 'fmCURL.class.php';
+require_once __DIR__ . '/fmCURL.class.php';
 
 // *********************************************************************************************************************************
 define('FM_API_USER_AGENT',            'fmAPIphp/1.0');            // Our user agent string
@@ -163,7 +163,7 @@ class fmAPI extends fmCURL
     *    Returns:
     *       The newly created object.
     */
-   function __construct($options = array())
+   function __construct($options = [])
    {
       $options['userAgent'] = array_key_exists('userAgent', $options) ? $options['userAgent'] : FM_API_USER_AGENT;
 
@@ -176,10 +176,8 @@ class fmAPI extends fmCURL
       $this->tokenFilePath             = array_key_exists('tokenFilePath', $options) ? $options['tokenFilePath'] : '';
       $this->version                   = array_key_exists('version', $options) ? $options['version'] : FM_VERSION_LATEST;
 
-      if ($this->storeTokenInSession) {
-         if ((version_compare(PHP_VERSION, '5.4.0', '<') && (session_id() == '')) || (session_status() === PHP_SESSION_NONE)) {
-            session_start();
-         }
+      if ($this->storeTokenInSession && ((version_compare(PHP_VERSION, '5.4.0', '<') && (session_id() == '')) || (session_status() === PHP_SESSION_NONE))) {
+         session_start();
       }
 
       $token = array_key_exists('token', $options) ? $options['token'] : '';
@@ -193,7 +191,7 @@ class fmAPI extends fmCURL
          }
       }
 
-      $authentication = array_key_exists('authentication', $options) ? $options['authentication'] : array();
+      $authentication = array_key_exists('authentication', $options) ? $options['authentication'] : [];
 
       $this->setAuthentication($authentication);
 
@@ -201,14 +199,14 @@ class fmAPI extends fmCURL
 
       fmLogger('fmAPI: PHP v'. PHP_VERSION);
 
-      if (strpos(strtolower($this->host), 'http:') !== false) {
+      if (stripos($this->host, 'http:') !== false) {
          fmLogger('*********************************************************************************************************************.');
          fmLogger("Warning: You passed 'http://' and the Data/Admin API require https:// so your request may fail.");
          fmLogger('Warning: Your server may redirect to https but you SHOULD change your code to avoid an extra roundtrip.');
          fmLogger('Host = '. $this->host);
          fmLogger('*********************************************************************************************************************.');
       }
-      if ((strpos(strtolower($this->host), 'localhost') !== false) || (strpos(strtolower($this->host), '127.0.0.1') !== false)) {
+      if ((stripos($this->host, 'localhost') !== false) || (stripos($this->host, '127.0.0.1') !== false)) {
          fmLogger('*********************************************************************************************************************.');
          fmLogger("Warning: You are passing '". $this->host ."' as the host name.");
          fmLogger('Warning: This might fail with your SSL certificate so you should use the Fully Qualified Domain Name (FQDN) for the host.');
@@ -245,24 +243,22 @@ class fmAPI extends fmCURL
    //
    // While 'public', it's really intended only to be called by the fmAPI() and login() methods.
    //
-   public function curlAPI($url, $method = METHOD_GET, $data = '', $options = array())
+   public function curlAPI($url, $method = METHOD_GET, $data = '', $options = [])
    {
       // Start with any headers the caller may have set in 'CURLOPT_HTTPHEADER', then add in the standard ones.
-      $header = (array_key_exists('CURLOPT_HTTPHEADER', $options) && is_array($options['CURLOPT_HTTPHEADER'])) ? $options['CURLOPT_HTTPHEADER'] : array();
+      $header = (array_key_exists('CURLOPT_HTTPHEADER', $options) && is_array($options['CURLOPT_HTTPHEADER'])) ? $options['CURLOPT_HTTPHEADER'] : [];
 
       if (array_key_exists(FM_CONTENT_TYPE, $options) && ($options[FM_CONTENT_TYPE] != '')) {
          $header[] = FM_CONTENT_TYPE .' '. $options[FM_CONTENT_TYPE];
       }
 
       if (array_key_exists(FM_AUTHORIZATION_BASIC, $options) && ($options[FM_AUTHORIZATION_BASIC] != '')) {
-         $header[] = FM_AUTHORIZATION_BASIC .' '. $options[FM_AUTHORIZATION_BASIC];
-      }
-      else if (array_key_exists(FM_TOKEN, $options) && ($options[FM_TOKEN] != '')) {
-         $header[] = FM_AUTHORIZATION_BEARER .' '. $options[FM_TOKEN];
-      }
-      else if (array_key_exists(FM_OAUTH_REQUEST_ID, $options) && ($options[FM_OAUTH_REQUEST_ID] != '')) {
-         $header[] = FM_OAUTH_REQUEST_ID .' '. $options[FM_OAUTH_REQUEST_ID];
-         $header[] = FM_OAUTH_REQUEST_IDENTIFIER .' '. $options[FM_OAUTH_REQUEST_IDENTIFIER];
+          $header[] = FM_AUTHORIZATION_BASIC .' '. $options[FM_AUTHORIZATION_BASIC];
+      } elseif (array_key_exists(FM_TOKEN, $options) && ($options[FM_TOKEN] != '')) {
+          $header[] = FM_AUTHORIZATION_BEARER .' '. $options[FM_TOKEN];
+      } elseif (array_key_exists(FM_OAUTH_REQUEST_ID, $options) && ($options[FM_OAUTH_REQUEST_ID] != '')) {
+          $header[] = FM_OAUTH_REQUEST_ID .' '. $options[FM_OAUTH_REQUEST_ID];
+          $header[] = FM_OAUTH_REQUEST_IDENTIFIER .' '. $options[FM_OAUTH_REQUEST_IDENTIFIER];
       }
 
       $options['CURLOPT_HTTPHEADER'] = $header;
@@ -291,7 +287,7 @@ class fmAPI extends fmCURL
    // Typically you will use one of the apiXXXX() methods to talk to the API instead of calling this directly.
    // You could override this method to do some post processing of the data if the need arises.
    //
-   public function fmAPI($url, $method = METHOD_GET, $data = '', $options = array())
+   public function fmAPI($url, $method = METHOD_GET, $data = '', $options = [])
    {
       $apiOptions[FM_CONTENT_TYPE]  = CONTENT_TYPE_JSON;
       $apiOptions[FM_TOKEN]         = $this->getToken();
@@ -336,22 +332,18 @@ class fmAPI extends fmCURL
       // If the API told us the token is invalid it's typically going to be that it 'timed out' (approximately 15 minutes of no use),
       // so request a new token by logging in again, then reissuing our request to the API.
       if ($this->getIsBadToken($result)) {
-         $result = $this->login();
-         if (! $this->getIsError($result)) {
-            $apiOptions[FM_TOKEN] = $this->getToken();
-            $result = $this->curlAPI($url, $method, $data, $apiOptions);         // Send the request (again)
-         }
-      }
-
-      // If there's a token in the HTTP header, update our token with it. This covers the case where we don't have it
-      // stored or it changed(!) on the server. Either way we're covered. setToken() will also update the time stamp.
-      else if (! $this->getIsError($result)) {
-         if (array_key_exists(FM_ACCESS_TOKEN, $this->httpHeaders) && array_key_exists(0, $this->httpHeaders[FM_ACCESS_TOKEN])) {
-            $this->setToken($this->httpHeaders[FM_ACCESS_TOKEN][0]);
-         }
-         else {
-            $this->setToken($this->getToken());                                 // Update the time stamp
-         }
+          $result = $this->login();
+          if (! $this->getIsError($result)) {
+             $apiOptions[FM_TOKEN] = $this->getToken();
+             $result = $this->curlAPI($url, $method, $data, $apiOptions);         // Send the request (again)
+          }
+      } elseif (! $this->getIsError($result)) {
+          if (array_key_exists(FM_ACCESS_TOKEN, $this->httpHeaders) && array_key_exists(0, $this->httpHeaders[FM_ACCESS_TOKEN])) {
+             $this->setToken($this->httpHeaders[FM_ACCESS_TOKEN][0]);
+          }
+          else {
+             $this->setToken($this->getToken());                                 // Update the time stamp
+          }
       }
 
 
@@ -388,9 +380,9 @@ class fmAPI extends fmCURL
    // Returns an array of response messages returned in the result from the server. It's possible that more than one error could be
    // returned, so you'll either need to walk the array or look for a specific code with the getCodeExists() method.
    //
-   public function getMessages($result)
+   public function getMessages($result): array
    {
-      $messages = array();
+      $messages = [];
 
       return $messages;
    }
@@ -398,9 +390,9 @@ class fmAPI extends fmCURL
    // *********************************************************************************************************************************
    // Returns the response returned in the result from the server. This is where the data gets returned.
    //
-   public function getResponse($result)
+   public function getResponse($result): array
    {
-      $response = array();
+      $response = [];
 
       return $response;
    }
@@ -408,9 +400,9 @@ class fmAPI extends fmCURL
    // *********************************************************************************************************************************
    // Returns the response data (only) returned in the result from the server.
    //
-   public function getResponseData($result)
+   public function getResponseData($result): array
    {
-      $responseData = array();
+      $responseData = [];
 
       return $responseData;
    }
@@ -444,17 +436,14 @@ class fmAPI extends fmCURL
       $messages = $this->getMessages($result);
       foreach ($messages as $message) {
          if (array_key_exists(FM_CODE, $message) && ($message[FM_CODE] != 0)) {
-            $isError = true;
-         }
-         else if (array_key_exists(FM_MESSAGE, $message) && ($message[FM_MESSAGE] != '') && ($message[FM_MESSAGE] != FM_MESSAGE_OK)) {
-            $isError = true;
+             $isError = true;
+         } elseif (array_key_exists(FM_MESSAGE, $message) && ($message[FM_MESSAGE] != '') && ($message[FM_MESSAGE] != FM_MESSAGE_OK)) {
+             $isError = true;
          }
       }
 
-      if (! $isError) {
-         if (($this->curlErrNum != '') && ($this->curlErrMsg != '')) {
-            $isError = true;
-         }
+      if (!$isError && (($this->curlErrNum != '') && ($this->curlErrMsg != ''))) {
+         $isError = true;
       }
 
       return $isError;
@@ -482,9 +471,12 @@ class fmAPI extends fmCURL
    // Caution: that the result returned is an *array* of code/message pairs. The Data API may returned multiple pairs.
    // We only return code/message pairs that are non-zero codes and non-empty and not 'OK' messages.
    //
-   public function getMessageInfo($result)
+   /**
+    * @return mixed[]
+    */
+   public function getMessageInfo($result): array
    {
-      $messageInfo = array();
+      $messageInfo = [];
 
       $messages = $this->getMessages($result);
 
@@ -493,17 +485,14 @@ class fmAPI extends fmCURL
          $theMessage = (array_key_exists(FM_MESSAGE, $message) && ($message[FM_MESSAGE] != '')) ? $message[FM_MESSAGE] : '';
 
          if ($theCode != 0) {
-            $messageInfo[] = $message;
-         }
-         else if (($theMessage != '') && ($theMessage != FM_MESSAGE_OK)) {
-            $messageInfo[] = $message;
+             $messageInfo[] = $message;
+         } elseif (($theMessage != '') && ($theMessage != FM_MESSAGE_OK)) {
+             $messageInfo[] = $message;
          }
       }
 
-      if (count($messageInfo) == 0) {
-         if (($this->curlErrNum != '') && ($this->curlErrMsg != '')) {
-            $messageInfo[] = array(FM_CODE => $this->curlErrNum, FM_MESSAGE => $this->curlErrMsg);
-         }
+      if (count($messageInfo) == 0 && (($this->curlErrNum != '') && ($this->curlErrMsg != ''))) {
+         $messageInfo[] = [FM_CODE => $this->curlErrNum, FM_MESSAGE => $this->curlErrMsg];
       }
 
       // Uncomment these lines if you want the HTTP result to be returned.
@@ -550,9 +539,12 @@ class fmAPI extends fmCURL
    }
 
    // *********************************************************************************************************************************
-   public function getTokenDataFromStorage()
+   /**
+    * @return mixed[]
+    */
+   public function getTokenDataFromStorage(): array
    {
-      $tokenData = array();
+      $tokenData = [];
 
       if (isset($_SESSION) && array_key_exists($this->sessionTokenKey, $_SESSION) && ($_SESSION[$this->sessionTokenKey] != '')) {
          $theData = $this->decryptTokenData(unserialize($_SESSION[$this->sessionTokenKey]));
@@ -561,7 +553,7 @@ class fmAPI extends fmCURL
          }
       }
 
-      if ((count($tokenData) == 0) and ($this->tokenFilePath != '') && file_exists($this->tokenFilePath)) {
+      if (count($tokenData) == 0 && (($this->tokenFilePath != '') && file_exists($this->tokenFilePath))) {
          $theData = $this->decryptTokenData(unserialize(file_get_contents($this->tokenFilePath)));
          if (is_array($theData)) {
             $tokenData = $theData;
@@ -572,7 +564,7 @@ class fmAPI extends fmCURL
    }
 
    // *********************************************************************************************************************************
-   public function setAuthentication($data = array())
+   public function setAuthentication($data = []): void
    {
       $this->credentials = '';
       $this->setToken();                                                                        // Invalidate token
@@ -602,7 +594,7 @@ class fmAPI extends fmCURL
    //
    protected function setTokenDataInStorage()
    {
-      $tokenData = array();
+      $tokenData = [];
       $tokenData['token']          = $this->token;
       $tokenData['tokenTimeStamp'] = $this->tokenTimeStamp;
       $serialized = serialize($tokenData);
