@@ -26,6 +26,11 @@
   "require-dev": {
     "rector/rector": "^1.2"
   },
+  "autoload": {
+    "files": [
+      "fmPDA/vLatest/fmPDA.php"
+    ]
+  },
   "scripts": {
     "rector": "vendor/bin/rector",
     "rector:dry-run": "vendor/bin/rector process --dry-run",
