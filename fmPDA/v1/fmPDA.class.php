@@ -210,7 +210,7 @@ class fmPDA extends fmPDAGlue
     *       $fm = new fmPDA($database, $host, $username, $password);
     *       $contents = $fm->getContainerData($containerURL);
     */
-   public function getContainerData(string $containerURL, $options = [])
+   public function getContainerData($containerURL, $options = [])
    {
       $options = array_merge(['retryOn401Error' => true], $options);
 

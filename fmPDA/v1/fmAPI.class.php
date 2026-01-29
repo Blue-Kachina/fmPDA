@@ -287,7 +287,7 @@ class fmAPI extends fmCURL
    // Typically you will use one of the apiXXXX() methods to talk to the API instead of calling this directly.
    // You could override this method to do some post processing of the data if the need arises.
    //
-   public function fmAPI(string $url, $method = METHOD_GET, $data = '', $options = [])
+   public function fmAPI($url, $method = METHOD_GET, $data = '', $options = [])
    {
       $apiOptions[FM_CONTENT_TYPE]  = CONTENT_TYPE_JSON;
       $apiOptions[FM_TOKEN]         = $this->getToken();

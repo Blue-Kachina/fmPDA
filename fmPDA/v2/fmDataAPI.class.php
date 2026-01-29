@@ -192,7 +192,7 @@ class fmDataAPI extends fmAPI
     *    Example:
     *       $fm = new fmDataAPI($database, $host, $username, $password);
     */
-   function __construct($database, $host, $username, $password, array $options = [])
+   function __construct($database, $host, $username, $password, $options = [])
    {
       $this->database = $database;
 
