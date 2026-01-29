@@ -27,14 +27,14 @@
 //
 // *********************************************************************************************************************************
 
-require_once __DIR__ . '/fmCommand.class.php';
+require_once 'fmCommand.class.php';
 
 // *********************************************************************************************************************************
 class fmAddEdit extends fmCommand
 {
    public $fields;
 
-   function __construct($fm, $layout, $fieldValues = [])
+   function __construct($fm, $layout, $fieldValues = array())
    {
       parent::__construct($fm, $layout);
 
@@ -43,7 +43,7 @@ class fmAddEdit extends fmCommand
       return;
    }
 
-   function setField(string $field, $value, $repetition = 0): void
+   function setField($field, $value, $repetition = 0)
    {
       $value = $this->jsonEscapeValue($value);
 
@@ -54,7 +54,7 @@ class fmAddEdit extends fmCommand
       }
    }
 
-   function setFields($fields): void
+   function setFields($fields)
    {
       $this->fields = $fields;
    }

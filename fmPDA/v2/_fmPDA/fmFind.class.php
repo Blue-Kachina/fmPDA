@@ -27,7 +27,7 @@
 //
 // *********************************************************************************************************************************
 
-require_once __DIR__ . '/fmCommand.class.php';
+require_once 'fmCommand.class.php';
 
 // *********************************************************************************************************************************
 class fmFind extends fmCommand
@@ -51,12 +51,12 @@ class fmFind extends fmCommand
       return $result;
    }
 
-   function setRelatedSetsFilters($relatedsetsfilter, $relatedsetsmax = null): void
+   function setRelatedSetsFilters($relatedsetsfilter, $relatedsetsmax = null)
    {
       fmLogger(__METHOD__ .'(): is not supported by the Data API.');
    }
 
-   function getRelatedSetsFilters(): void
+   function getRelatedSetsFilters()
    {
       fmLogger(__METHOD__ .'(): is not supported by the Data API.');
    }

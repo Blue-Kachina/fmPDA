@@ -28,7 +28,7 @@
 // *********************************************************************************************************************************
 
 // *********************************************************************************************************************************
-function jsonEscapeValue_arraywalk(&$value, $key): void
+function jsonEscapeValue_arraywalk(&$value, $key)
 {
    if (!is_array($value)) {
       $value = (string)$value;
@@ -43,10 +43,10 @@ class fmRecord
    public $layout;
    public $fm;
 
-   function __construct($fm, $layout, array $data = [])
+   function __construct($fm, $layout, $data = array())
    {
-      $data[FM_FIELD_DATA] = array_key_exists(FM_FIELD_DATA, $data) ? $data[FM_FIELD_DATA] : [];
-      $data[FM_PORTAL_DATA] = array_key_exists(FM_PORTAL_DATA, $data) ? $data[FM_PORTAL_DATA] : [];
+      $data[FM_FIELD_DATA] = array_key_exists(FM_FIELD_DATA, $data) ? $data[FM_FIELD_DATA] : array();
+      $data[FM_PORTAL_DATA] = array_key_exists(FM_PORTAL_DATA, $data) ? $data[FM_PORTAL_DATA] : array();
       $data[FM_RECORD_ID] = array_key_exists(FM_RECORD_ID, $data) ? $data[FM_RECORD_ID] : '';
       $data[FM_MOD_ID] = array_key_exists(FM_MOD_ID, $data) ? $data[FM_MOD_ID] : '';
 
@@ -65,13 +65,13 @@ class fmRecord
       return;
    }
 
-   public function clearEditedFields(): void
+   public function clearEditedFields()
    {
-      $this->editedFields = [];
+      $this->editedFields = array();
       return;
    }
 
-   function commit(): bool
+   function commit()
    {
       $recordID = $this->getRecordId();
 
@@ -102,20 +102,23 @@ class fmRecord
       return $this->fm->apiDeleteRecord($this->layout, $this->getRecordId());
    }
 
-   private function getFieldData(string $field, $repetition = 0, bool $decode = true)
+   private function getFieldData($field, $repetition = 0, $decode = true)
    {
       $result = '';
 
-      if (array_key_exists($field .'('. $repetition .')', $this->data[FM_FIELD_DATA])) {
-          // Try exact repetition
-          $result =  $this->data[FM_FIELD_DATA][$field .'('. $repetition .')'];
-      } elseif (($repetition == 0) && array_key_exists($field .'(1)', $this->data[FM_FIELD_DATA])) {
-          // See if it's really rep 1
-          $result =  $this->data[FM_FIELD_DATA][$field .'(1)'];
-      } elseif (array_key_exists($field, $this->data[FM_FIELD_DATA])) {
-          // No repetition
-          $result =  $this->data[FM_FIELD_DATA][$field];
-      } else {
+      if (array_key_exists($field .'('. $repetition .')', $this->data[FM_FIELD_DATA])) {              // Try exact repetition
+         $result =  $this->data[FM_FIELD_DATA][$field .'('. $repetition .')'];
+      }
+
+      else if (($repetition == 0) && array_key_exists($field .'(1)', $this->data[FM_FIELD_DATA])) {   // See if it's really rep 1
+         $result =  $this->data[FM_FIELD_DATA][$field .'(1)'];
+      }
+
+      else if (array_key_exists($field, $this->data[FM_FIELD_DATA])) {                                // No repetition
+         $result =  $this->data[FM_FIELD_DATA][$field];
+      }
+
+      else {
          fmLogger(__METHOD__ .'(): '. $field .' does not exist. Is it missing from your FileMaker layout?');
       }
 
@@ -126,24 +129,21 @@ class fmRecord
       return $result;
    }
 
-   function getLayout(): fmLayout
+   function getLayout()
    {
       return new fmLayout($this->fm, $this->layout, $this->data);
    }
 
-   /**
-    * @return int[]|string[]
-    */
-   function getFields(): array
+   function getFields()
    {
-      $fields = [];
+      $fields = array();
 
       if ((count($this->data) > 0)) {
          $allfields = array_keys($this->data[FM_FIELD_DATA]);
 
-         $fields = [];
+         $fields = array();
          foreach ($allfields as $field) {
-            if (substr($field, -1, 1) === ')') {                            // If it's a repeating field, remove (nnn)
+            if (substr($field, -1, 1) == ')') {                            // If it's a repeating field, remove (nnn)
                $pieces = explode('(', $field);
                $field = $pieces[0];
             }
@@ -174,7 +174,7 @@ class fmRecord
    // Note that $fieldType is a new parameter to this API - it does not exist in the old API.
    // The Data API does not return metadata so we can not determine the field type on our own.
    //
-   function getFieldAsTimestamp(string $field, $repetition = 0, $fieldType = 'timestamp')
+   function getFieldAsTimestamp($field, $repetition = 0, $fieldType = 'timestamp')
    {
       $fieldData = $this->getFieldData($field, $repetition, false/* Don't decode */);
 
@@ -235,12 +235,9 @@ class fmRecord
       return $this->data[FM_MOD_ID];
    }
 
-   /**
-    * @return int[]|string[]
-    */
-   function getRelatedSets(): array
+   function getRelatedSets()
    {
-      $relatedSets = [];
+      $relatedSets = array();
 
       $recordData = $this->data[0];
       if (! is_null($recordData)) {
@@ -250,15 +247,15 @@ class fmRecord
       return $relatedSets;
    }
 
-   function getRelatedSet(string $relatedSet)
+   function getRelatedSet($relatedSet)
    {
-      $result = [];
+      $result = array();
 
       if (array_key_exists($relatedSet, $this->data[FM_PORTAL_DATA])) {
          foreach($this->data[FM_PORTAL_DATA][$relatedSet] as $data) {
-            $relatedRecord = [];
+            $relatedRecord = array();
             $relatedRecord[FM_FIELD_DATA] = $data;                                  // Related data becomes the record data
-            $relatedRecord[FM_PORTAL_DATA] = [];
+            $relatedRecord[FM_PORTAL_DATA] = array();
             $relatedRecord[FM_RECORD_ID] = $data[FM_RECORD_ID];
             $relatedRecord[FM_MOD_ID] = '';
             $result[] = new fmRecord($this->fm, $this->layout, $relatedRecord);
@@ -271,9 +268,14 @@ class fmRecord
       return $result;
    }
 
-   function setField(string $field, $value, $repetition = 0)
+   function setField($field, $value, $repetition = 0)
    {
-      $fieldName = $repetition == 0 ? $field : $field .'('. $repetition .')';
+      if ($repetition == 0) {
+         $fieldName = $field;
+      }
+      else {
+         $fieldName = $field .'('. $repetition .')';
+      }
 
       if (array_key_exists($fieldName, $this->data[FM_FIELD_DATA])) {
          $this->editedFields[$fieldName] = (string)$value;
@@ -304,7 +306,7 @@ class fmRecord
 
 
    // Handy debugging function to see all the fields and related data in a record. Typically sent to the fmLogger::log() method.
-   function dumpRecord(): string
+   function dumpRecord()
    {
       $data = 'Record ('. FM_RECORD_ID .' = '. $this->getRecordId() .', '. FM_MOD_ID .' = '. $this->getModificationId() .')'. '<br>';
       $data .= print_r($this->data[FM_FIELD_DATA], 1);

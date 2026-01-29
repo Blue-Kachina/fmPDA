@@ -27,7 +27,7 @@
 //
 // *********************************************************************************************************************************
 
-require_once __DIR__ . '/fmCommand.class.php';
+require_once 'fmCommand.class.php';
 
 // *********************************************************************************************************************************
 class fmScript extends fmCommand
@@ -47,7 +47,7 @@ class fmScript extends fmCommand
    // Execute a script. We do this by doing a apiGetRecords() call for the first record on the specified layout.
    // For this to work, *YOU MUST* have at least one record in this table or the script *WILL NOT EXECUTE*.
    // For efficiency, you may want to create a table with just one record and no fields.
-   function execute(): void
+   function execute()
    {
       $apiResult = $this->fm->apiPerformScript($this->layout, $this->script, $this->params, $this->resultLayout);
 
@@ -60,7 +60,7 @@ class fmScript extends fmCommand
                $this->layout = $this->resultLayout;
             }
 
-            $result = $this->fm->newResult($this->layout, array_key_exists(0, $responseData) ? $responseData : []);
+            $result = $this->fm->newResult($this->layout, array_key_exists(0, $responseData) ? $responseData : array());
          }
          else {
             $result = $apiResult;

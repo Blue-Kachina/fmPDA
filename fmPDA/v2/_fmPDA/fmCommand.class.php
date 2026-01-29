@@ -32,33 +32,55 @@ class fmCommand
 {
    public $layout;
    public $fm;
-   public $recordID = '';
-   public $offset = 0;
-   public $range = 0;
-   public $sort = [];
-   public $script = '';
-   public $scriptParams = '';
-   public $preScript = '';
-   public $preScriptParams = '';
-   public $preSortScript = '';
-   public $preSortScriptParams = '';
-   public $resultLayout = '';
+   public $recordID;
+   public $offset;
+   public $range;
+   public $sort;
+   public $script;
+   public $scriptParams;
+   public $preScript;
+   public $preScriptParams;
+   public $preSortScript;
+   public $preSortScriptParams;
+   public $resultLayout;
 
    function __construct($fm, $layout)
    {
       $this->fm = $fm;
       $this->layout = $layout;
+      $this->recordID = '';
+      $this->offset = 0;
+      $this->range = 0;
+      $this->sort = array();
+      $this->script = '';
+      $this->scriptParams = '';
+      $this->preScript = '';
+      $this->preScriptParams = '';
+      $this->preSortScript = '';
+      $this->preSortScriptParams = '';
+      $this->resultLayout = '';
    }
 
-   function getAPIParams(): array
+   function getAPIParams()
    {
       $params =
-            ['limit'                  => $this->range, 'offset'                 => $this->offset, 'sort'                   => $this->sort, 'script'                 => $this->script, 'scriptParams'           => $this->scriptParams, 'scriptPrerequest'       => $this->preScript, 'scriptPrerequestParams' => $this->preScriptParams, 'scriptPresort'          => $this->preSortScript, 'scriptPresortParams'    => $this->preSortScriptParams, 'layoutResponse'         => $this->resultLayout];
+            array(
+               'limit'                  => $this->range,
+               'offset'                 => $this->offset,
+               'sort'                   => $this->sort,
+               'script'                 => $this->script,
+               'scriptParams'           => $this->scriptParams,
+               'scriptPrerequest'       => $this->preScript,
+               'scriptPrerequestParams' => $this->preScriptParams,
+               'scriptPresort'          => $this->preSortScript,
+               'scriptPresortParams'    => $this->preSortScriptParams,
+               'layoutResponse'         => $this->resultLayout
+            );
 
       return $params;
    }
 
-  function execute(): void
+  function execute()
    {
       fmLogger(__METHOD__ .'(): must be overridden.');
    }
@@ -68,21 +90,21 @@ class fmCommand
       return $this->recordID;
    }
 
-   function addSortRule($fieldname, $precedence, $order = 'ascend'): void
+   function addSortRule($fieldname, $precedence, $order = 'ascend')
    {
-      $this->sort[$precedence] = ['fieldName' => $fieldname, 'precedence' => $precedence, 'sortOrder' => $order];
+      $this->sort[$precedence] = array('fieldName' => $fieldname, 'precedence' => $precedence, 'sortOrder' => $order);
 
       return;
    }
 
-   function clearSortRules(): void
+   function clearSortRules()
    {
-      $this->sort = [];
+      $this->sort = array();
 
       return;
    }
 
-   function setRange($skip = 0, $range = 0): void
+   function setRange($skip = 0, $range = 0)
    {
       $this->offset = $skip + 1;                // + 1 since Old PHP API wants to SKIP $skip records. Data API means to START at what is $skip
       $this->range = $range;
@@ -90,40 +112,40 @@ class fmCommand
       return;
    }
 
-   function getRange(): array
+   function getRange()
    {
-      return ['skip' => $this->offset - 1, 'max' => $this->range];
+      return array('skip' => $this->offset - 1, 'max' => $this->range);
    }
 
-   function setResultLayout($layout): void
+   function setResultLayout($layout)
    {
       $this->resultLayout = $layout;
    }
 
-   function setScript($scriptName, $scriptParameters = null): void
+   function setScript($scriptName, $scriptParameters = null)
    {
       $this->script = $scriptName;
       $this->scriptParams = $scriptParameters;
    }
 
-   function setPreCommandScript($scriptName, $scriptParameters = null): void
+   function setPreCommandScript($scriptName, $scriptParameters = null)
    {
       $this->preScript = $scriptName;
       $this->preScriptParams = $scriptParameters;
    }
 
-   function setPreSortScript($scriptName, $scriptParameters = null): void
+   function setPreSortScript($scriptName, $scriptParameters = null)
    {
       $this->preSortScript = $scriptName;
       $this->preSortScriptParams = $scriptParameters;
    }
 
-   function setRecordId($recordId): void
+   function setRecordId($recordId)
    {
       $this->recordID = $recordId;
    }
 
-   function validate($fieldName = null): void
+   function validate($fieldName = null)
    {
       fmLogger(__METHOD__ .'(): is not supported by the Data API.');
    }
@@ -133,7 +155,7 @@ class fmCommand
    // If you don't do this you'll get:
    // {"code":"507","message":"Value in field failed calculation test of validation entry option"}
    //
-   function jsonEscapeValue($value): string
+   function jsonEscapeValue($value)
    {
       return (string)$value;
    }

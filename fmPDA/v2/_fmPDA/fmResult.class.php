@@ -33,7 +33,7 @@ class fmResult
    public $layout;
    public $fm;
 
-   function __construct($fm, $layout, $data = [])
+   function __construct($fm, $layout, $data = array())
    {
       $this->fm = $fm;
       $this->layout = $layout;
@@ -55,12 +55,9 @@ class fmResult
       return $result;
    }
 
-   /**
-    * @return fmRecord[]
-    */
-   function getRecords(): array
+   function getRecords()
    {
-      $records = [];
+      $records = array();
 
       if (array_key_exists(FM_DATA, $this->data)) {
          $data = $this->data[FM_DATA];
@@ -73,12 +70,9 @@ class fmResult
       return $records;
    }
 
-   /**
-    * @return int[]|string[]
-    */
-   function getFields(): array
+   function getFields()
    {
-      $fields = [];
+      $fields = array();
 
       if (array_key_exists(FM_DATA, $this->data)) {
          $data = $this->data[FM_DATA];
@@ -86,9 +80,9 @@ class fmResult
          if ((count($data) > 0)) {
             $allfields = array_keys($data[0][FM_FIELD_DATA]);
 
-            $fields = [];
+            $fields = array();
             foreach ($allfields as $field) {
-               if (substr($field, -1, 1) === ')') {                            // If it's a repeating field, remove (nnn)
+               if (substr($field, -1, 1) == ')') {                            // If it's a repeating field, remove (nnn)
                   $pieces = explode('(', $field);
                   $field = $pieces[0];
                }
@@ -101,12 +95,9 @@ class fmResult
       return $fields;
    }
 
-   /**
-    * @return int[]|string[]
-    */
-   function getRelatedSets(): array
+   function getRelatedSets()
    {
-      $relatedSets = [];
+      $relatedSets = array();
 
       if (array_key_exists(FM_DATA, $this->data)) {
          $data = $this->data[FM_DATA];
@@ -165,7 +156,7 @@ class fmResult
       return $returnedCount;
    }
 
-   function getFirstRecord(): ?fmRecord
+   function getFirstRecord()
    {
       if (array_key_exists(FM_DATA, $this->data)) {
          $data = $this->data[FM_DATA];
@@ -182,7 +173,7 @@ class fmResult
       }
    }
 
-   function getLastRecord(): ?fmRecord
+   function getLastRecord()
    {
       if (array_key_exists(FM_DATA, $this->data)) {
          $data = $this->data[FM_DATA];

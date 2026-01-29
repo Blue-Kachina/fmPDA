@@ -27,7 +27,7 @@
 //
 // *********************************************************************************************************************************
 
-require_once __DIR__ . '/fmFind.class.php';
+require_once 'fmFind.class.php';
 
 // *********************************************************************************************************************************
 class fmFindQuery extends fmFind
@@ -46,11 +46,11 @@ class fmFindQuery extends fmFind
       $params = parent::getAPIParams();
 
       if (count($this->requests) > 0) {
-         $requests = [];
+         $requests = array();
          foreach ($this->requests as $findRequest) {
-            $query = [];
+            $query = array();
             $request = $findRequest->getRequest();
-            $fields = [];
+            $fields = array();
             foreach ($request as $requestParts) {
                $fields[$requestParts['fieldName']] = $requestParts['value'];
             }
@@ -75,7 +75,7 @@ class fmFindQuery extends fmFind
          }
          else {
             $responseData = $this->fm->getResponseData($apiResult);
-            $result = $this->fm->newResult($this->layout, array_key_exists(0, $responseData) ? $responseData : []);
+            $result = $this->fm->newResult($this->layout, array_key_exists(0, $responseData) ? $responseData : array());
          }
       }
       else {
@@ -85,7 +85,7 @@ class fmFindQuery extends fmFind
       return $result;
    }
 
-   function add($precedence, $findRequest): void
+   function add($precedence, $findRequest)
    {
       $request = new fmFindRequest($this->fm, $this->layout);
       $request->request = $findRequest->getRequest();
@@ -94,7 +94,7 @@ class fmFindQuery extends fmFind
       $this->requests[$precedence - 1] = $request;
    }
 
-   function setOmit($value): void
+   function setOmit($value)
    {
       $request = $this->requests[0];
       $request->setOmit($value);
@@ -102,7 +102,7 @@ class fmFindQuery extends fmFind
       $this->add(1, $request);
   }
 
-   function addFindCriterion($fieldName, $value): void
+   function addFindCriterion($fieldName, $value)
    {
       if (($fieldName != '') && ($value != '')) {
          $request = $this->requests[0];
@@ -113,9 +113,9 @@ class fmFindQuery extends fmFind
       }
    }
 
-   function clearFindCriteria(): void
+   function clearFindCriteria()
    {
-      $this->requests = [];
+      $this->requests = array();
 
       $this->requests[0] = new fmFindRequest($this->fm, $this->layout);
    }

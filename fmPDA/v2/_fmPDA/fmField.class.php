@@ -52,7 +52,7 @@ class fmField
       return $this->layout;
    }
 
-   function getRepetitionCount(): int
+   function getRepetitionCount()
    {
       fmLogger(__METHOD__ .'(): Unsupported (returning 1) for '. $this->fieldName);
 

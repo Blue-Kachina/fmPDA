@@ -28,15 +28,15 @@
 // *********************************************************************************************************************************
 
 // *********************************************************************************************************************************
-function fmGetIsError($result): bool
+function fmGetIsError($result)
 {
-   return (is_null($result) || ($result instanceof fmError));
+   return ((is_null($result) || ($result instanceof fmError)) ? true : false);
 }
 
 // *********************************************************************************************************************************
-function fmGetIsValid($result): bool
+function fmGetIsValid($result)
 {
-   return isset($result) && (! is_null($result)) && ! ($result instanceof fmError);
+   return (isset($result) && (! is_null($result)) && ! ($result instanceof fmError)) ? true : false;
 }
 
 ?>
