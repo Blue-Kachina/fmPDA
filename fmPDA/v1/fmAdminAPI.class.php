@@ -132,7 +132,7 @@ class fmAdminAPI extends fmAPI
     *    Example:
     *       $fm = new fmAdminAPI($host, $username, $password);
     */
-   function __construct($host, $username = '', $password = '', $options = [])
+   function __construct($host, $username = '', $password = '', array $options = [])
    {
       $options['logCURLResult']   = false;
       $options['host']            = $host;
