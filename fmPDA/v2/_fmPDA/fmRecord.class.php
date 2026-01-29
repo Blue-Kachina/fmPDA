@@ -154,12 +154,12 @@ class fmRecord
       return $fields;
    }
 
-   function getField($field, $repetition = 0)
+   function getField(string $field, $repetition = 0)
    {
       return $this->getFieldData($field, $repetition, true/* Decode */);
    }
 
-   function getFieldUnencoded($field, $repetition = 0)
+   function getFieldUnencoded(string $field, $repetition = 0)
    {
       return $this->getFieldData($field, $repetition, false/* Don't decode */);
    }
@@ -291,7 +291,7 @@ class fmRecord
    // Note that $fieldType is a new parameter to this API - it does not exist in the old API.
    // The Data API does not return metadata so we can not determine the field type on our own.
    //
-   function setFieldFromTimestamp($field, $timestamp, $repetition = 0, $fieldType = 'timestamp')
+   function setFieldFromTimestamp(string $field, $timestamp, $repetition = 0, $fieldType = 'timestamp')
    {
       switch ($fieldType) {
          case 'date':      { $result = $this->setField($field, date('m/d/Y', $timestamp), $repetition);        break; }

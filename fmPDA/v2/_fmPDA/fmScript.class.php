@@ -43,7 +43,7 @@ class fmScript extends fmCommand
       $this->params = $scriptParameters;
    }
 
-   function execute()
+   function execute(): void
    {
       $apiResult = $this->fm->apiExecuteScript($this->layout, $this->script, $this->params);
 

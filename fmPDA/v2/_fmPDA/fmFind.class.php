@@ -32,7 +32,7 @@ require_once __DIR__ . '/fmCommand.class.php';
 // *********************************************************************************************************************************
 class fmFind extends fmCommand
 {
-   function execute()
+   function execute(): void
    {
       $apiResult = $this->fm->apiGetRecords($this->layout, '', $this->getAPIParams());
 

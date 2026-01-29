@@ -97,11 +97,14 @@ class fmLayout
    }
 
    // *********************************************************************************************************************************
-   function getFields()
+   /**
+    * @return mixed[]
+    */
+   function getFields(): array
    {
       $fields = $this->getFieldNames();
 
-      foreach ($fields as $field => $value) {
+      foreach (array_keys($fields) as $field) {
          $fields[$field] = new fmField($this->fm, $this->layout, $field);     // Using the field as a key will overwrite for repeating fields
       }
 

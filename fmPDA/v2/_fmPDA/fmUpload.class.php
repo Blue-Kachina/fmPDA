@@ -53,7 +53,7 @@ class fmUpload extends fmCommand
    }
 
    // We mirror what the fmEdit command does by (optionally, but ON by default) returning the record we just 'edited'.
-   function execute($returnRecord = true)
+   function execute($returnRecord = true): void
    {
       $apiResult = $this->fm->apiUploadContainer($this->layout, $this->recordID, $this->fieldName, $this->fieldRepetition, $this->file);
 

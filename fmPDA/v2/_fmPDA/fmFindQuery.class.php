@@ -41,7 +41,7 @@ class fmFindQuery extends fmFind
       $this->clearFindCriteria();
    }
 
-   function getAPIParams()
+   function getAPIParams(): array
    {
       $params = parent::getAPIParams();
 
@@ -65,7 +65,7 @@ class fmFindQuery extends fmFind
       return $params;
    }
 
-   function execute()
+   function execute(): void
    {
       $apiResult = $this->fm->apiFindRecords($this->layout, '', $this->getAPIParams());
 

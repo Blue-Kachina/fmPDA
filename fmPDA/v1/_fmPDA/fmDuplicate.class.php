@@ -46,7 +46,7 @@ class fmDuplicate extends fmCommand
       return;
    }
 
-   function execute()
+   function execute(): void
    {
       $apiResult = $this->fm->apiGetRecord($this->layout, $this->recordID, '', $this->getAPIParams());
 

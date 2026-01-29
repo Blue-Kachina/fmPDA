@@ -1008,7 +1008,7 @@ class fmDataAPI extends fmAPI
     *          ...
     *       }
     */
-   public function apiGetContainer($layout, $recordID, $fieldName, $fieldRepetition = FM_FIELD_REPETITION_1, $options = [])
+   public function apiGetContainer($layout, string $recordID, $fieldName, $fieldRepetition = FM_FIELD_REPETITION_1, $options = [])
    {
       $options = array_merge(['retryOn401Error' => true], $options);
 
@@ -1122,7 +1122,7 @@ class fmDataAPI extends fmAPI
    // Returns an array of response messages returned in the result from the server. It's possible that more than one error could be
    // returned, so you'll either need to walk the array or look for a specific code with the getCodeExists() method.
    //
-   public function getMessages($result)
+   public function getMessages($result): array
    {
       $messages = [];
 
@@ -1136,7 +1136,7 @@ class fmDataAPI extends fmAPI
    // *********************************************************************************************************************************
    // Returns the response returned in the result from the server. This is where the data gets returned.
    //
-   public function getResponse($result)
+   public function getResponse($result): array
    {
       $response = [];
 
@@ -1150,7 +1150,7 @@ class fmDataAPI extends fmAPI
    // *********************************************************************************************************************************
    // Returns the response data (only) returned in the result from the server.
    //
-   public function getResponseData($result)
+   public function getResponseData($result): array
    {
       $responseData = [];
 

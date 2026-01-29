@@ -163,7 +163,7 @@ class fmAPI extends fmCURL
     *    Returns:
     *       The newly created object.
     */
-   function __construct($options = [])
+   function __construct(array $options = [])
    {
       $options['userAgent'] = array_key_exists('userAgent', $options) ? $options['userAgent'] : FM_API_USER_AGENT;
 
@@ -243,7 +243,7 @@ class fmAPI extends fmCURL
    //
    // While 'public', it's really intended only to be called by the fmAPI() and login() methods.
    //
-   public function curlAPI($url, $method = METHOD_GET, $data = '', $options = [])
+   public function curlAPI(string $url, $method = METHOD_GET, $data = '', $options = [])
    {
       // Start with any headers the caller may have set in 'CURLOPT_HTTPHEADER', then add in the standard ones.
       $header = (array_key_exists('CURLOPT_HTTPHEADER', $options) && is_array($options['CURLOPT_HTTPHEADER'])) ? $options['CURLOPT_HTTPHEADER'] : [];
@@ -459,7 +459,7 @@ class fmAPI extends fmCURL
 
       $messages = $this->getMessageInfo($result);
 
-      if (count($messages) > 0) {
+      if ($messages !== []) {
          $message = $messages[0];
       }
 
