@@ -24,8 +24,8 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importNames();
 
     $rectorConfig->sets([
-//        LevelSetList::UP_TO_PHP_56,
-        LevelSetList::UP_TO_PHP_70,
+        LevelSetList::UP_TO_PHP_56,
+//        LevelSetList::UP_TO_PHP_70,
 //        LevelSetList::UP_TO_PHP_71,
 //        LevelSetList::UP_TO_PHP_72,
 //        LevelSetList::UP_TO_PHP_73,

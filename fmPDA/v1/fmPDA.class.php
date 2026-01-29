@@ -68,7 +68,7 @@ if (DEFINE_FILEMAKER_CLASS) {
 
    class FileMaker extends fmDataAPI
    {
-      static function isError($result): bool       { return fmGetIsError($result); }      // You can call fmGetIsError() instead of this
+      static function isError($result)       { return fmGetIsError($result); }      // You can call fmGetIsError() instead of this
       static function getAPIVersion(): string        { return '1.0'; }                      // Just something 'new'
       static function getMinServerVersion(): string  { return '17.0.1.146'; }               // Needs FMS 17 for this version of the Data API
    }
@@ -262,7 +262,7 @@ class fmPDA extends fmPDAGlue
     *          ...
     *       }
     */
-   public function getRecordById($layout, string $recordID = '')
+   public function getRecordById($layout, $recordID = '')
    {
       $apiResult = $this->apiGetRecord($layout, $recordID);
 
@@ -606,7 +606,7 @@ class fmPDA extends fmPDAGlue
    //
    // Map any other errors returned by fmCURL or fmDataAPI by overriding this method.
    //
-   function getMessageInfo($result): array
+   function getMessageInfo($result)
    {
       $messageInfo = parent::getMessageInfo($result);
       $numMessages = count($messageInfo);

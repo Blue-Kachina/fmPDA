@@ -38,7 +38,7 @@ class fmAdd extends fmAddEdit
       return;
    }
 
-   function execute($returnRecord = true): void
+   function execute($returnRecord = true)
    {
       $apiResult = $this->fm->apiCreateRecord($this->layout, $this->fields, $this->getAPIParams());
 

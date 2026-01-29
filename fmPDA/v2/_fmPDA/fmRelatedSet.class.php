@@ -74,14 +74,11 @@ class fmRelatedSet
       }
    }
 
-   /**
-    * @return mixed[]
-    */
-   function getFields(): array
+   function getFields()
    {
       $fields = $this->getFieldNames();
 
-      foreach (array_keys($fields) as $fieldName) {
+      foreach ($fields as $fieldName => $field) {
          $fields[$fieldName] = new fmField($this->fm, $this->layout, $fieldName);      // Using the field as a key will overwrite for repeating fields
       }
 

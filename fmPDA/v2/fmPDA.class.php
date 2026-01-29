@@ -264,7 +264,7 @@ class fmPDA extends fmPDAGlue
     *          ...
     *       }
     */
-   public function getRecordById($layout, string $recordID = '')
+   public function getRecordById($layout, $recordID = '')
    {
       $apiResult = $this->apiGetRecord($layout, $recordID);
 
@@ -701,7 +701,7 @@ class fmPDA extends fmPDAGlue
    //
    // Map any other errors returned by fmCURL or fmDataAPI by overriding this method.
    //
-   function getMessageInfo($result): array
+   function getMessageInfo($result)
    {
       $messageInfo = parent::getMessageInfo($result);
       $numMessages = count($messageInfo);

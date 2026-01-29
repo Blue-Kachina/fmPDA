@@ -43,7 +43,7 @@ class fmDelete extends fmCommand
       return;
    }
 
-   function execute(): void
+   function execute()
    {
       $record = $this->fm->getRecordById($this->layout, $this->recordID);        // Old api returns record added so grab it now
 

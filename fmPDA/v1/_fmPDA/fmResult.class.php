@@ -106,13 +106,13 @@ class fmResult
       return $relatedSets;
    }
 
-   function getTableRecordCount(): int
+   function getTableRecordCount()
    {
       fmLogger(__METHOD__ .'(): is not supported by the Data API. Returning getFetchCount('. $this->getFetchCount() .')');
       return $this->getFetchCount();
    }
 
-   function getFoundSetCount(): int
+   function getFoundSetCount()
    {
       fmLogger(__METHOD__ .'(): is not supported by the Data API. Returning getFetchCount('. $this->getFetchCount() .')');
       return $this->getFetchCount();

@@ -448,7 +448,7 @@ class fmCURL
     *          ...
     *       }
     */
-   public function getFile(string $url, $options = []): array
+   public function getFile($url, $options = []): array
    {
       $defaultOptions = ['action' => 'get', 'compress' => 'gzip', 'compressionLevel' => '9', 'createCookieJar' => true, 'retryOn401Error' => false, 'getMimeType' => true];
 

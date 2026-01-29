@@ -32,7 +32,7 @@ require_once __DIR__ . '/fmFind.class.php';
 // *********************************************************************************************************************************
 class fmFindAny extends fmFind
 {
-   function execute(): void
+   function execute()
    {
       // Always return the first record. That's just as random as any other!
       $this->offset = 1;

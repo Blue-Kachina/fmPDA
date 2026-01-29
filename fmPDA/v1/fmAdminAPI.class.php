@@ -1117,7 +1117,7 @@ class fmAdminAPI extends fmAPI
    // *********************************************************************************************************************************
    // Returns the response returned in the result from the server. This is where the data gets returned.
    //
-   public function getResponse($result): array
+   public function getResponse($result)
    {
       $response = ($result != null) ? $result : [];
 
@@ -1127,7 +1127,7 @@ class fmAdminAPI extends fmAPI
    // *********************************************************************************************************************************
    // Returns the response data (only) returned in the result from the server.
    //
-   public function getResponseData($result): array
+   public function getResponseData($result)
    {
       $responseData = $this->getResponse();
 
